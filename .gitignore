@@ -13,7 +13,7 @@ env/
 db.sqlite3
 db.sqlite3-journal
 staticfiles/
-media/
+media/temp/
 
 # Environment variables
 .env
@@ -25,4 +25,3 @@ media/
 .idea/
 .DS_Store
 Thumbs.db
-*.lnk
