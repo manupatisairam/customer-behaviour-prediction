@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block title %}Register | AI Call Center Analytics{% endblock %}
+
+{% block content %}
+<section class="min-h-[80vh] flex items-center justify-center px-6 relative overflow-hidden py-12">
+    <!-- Blurred Background Shapes -->
+    <div class="absolute top-20 left-10 w-64 h-64 bg-indigo-500/20 rounded-full blur-[80px] animate-pulse"></div>
+    <div class="absolute bottom-20 right-10 w-96 h-96 bg-purple-500/20 rounded-full blur-[100px] animate-pulse" style="animation-delay: 2s;"></div>
+
+    <div class="w-full max-w-md z-10" data-aos="zoom-in" data-aos-duration="600">
+        <div class="glass p-10 rounded-[2.5rem] border-white/10 shadow-2xl">
+            <div class="text-center mb-10">
+                <h1 class="text-3xl font-bold font-heading mb-2 tracking-widest text-primary">CREATE ACCOUNT</h1>
+                <p class="text-gray-400 text-sm leading-relaxed">
+                    Join the next generation of <span class="text-cyan-400 font-semibold border-b border-cyan-400/30 pb-0.5">AI-DRIVEN ANALYTICS</span>
+                </p>
+            </div>
+
+            <form method="POST" class="space-y-5">
+                {% csrf_token %}
+                
+                {% for field in form %}
+                    <div>
+                        <label class="block text-sm font-medium text-gray-400 mb-2 px-1 uppercase tracking-wider text-[10px]">{{ field.label }}</label>
+                        <div class="relative group">
+                            {{ field }}
+                            <div class="absolute inset-0 rounded-2xl bg-cyan-400/5 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity"></div>
+                        </div>
+                        {% for error in field.errors %}
+                            <p class="text-xs text-red-400 mt-1 px-1">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+
+                <button type="submit" class="btn-neon w-full py-4 rounded-2xl font-bold text-lg mt-6 group overflow-hidden relative justify-center">
+                    <span class="scan-line"></span>
+                    <span class="relative z-10 flex items-center justify-center gap-2 uppercase tracking-widest">
+                        CREATE ACCOUNT
+                        <i data-lucide="user-plus" class="w-5 h-5 group-hover:scale-110 transition-transform"></i>
+                    </span>
+                </button>
+            </form>
+
+            <div class="mt-8 text-center">
+                <p class="text-sm text-gray-500 uppercase tracking-tighter">Already part of the network? <a href="{% url 'login' %}" class="text-indigo-400 font-semibold hover:underline">Login here</a></p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    /* Styling Django Form Inputs to match Tailwind design */
+    input[type="text"], input[type="password"], input[type="email"] {
+        width: 100%;
+        background-color: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 1.25rem;
+        padding: 1.1rem 1.25rem;
+        outline: none;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        color: white;
+    }
+    input:focus {
+        background-color: rgba(255, 255, 255, 0.07);
+        border-color: var(--primary);
+        box-shadow: 0 0 20px rgba(0, 242, 255, 0.15);
+        transform: scale(1.01);
+    }
+</style>
+{% endblock %}

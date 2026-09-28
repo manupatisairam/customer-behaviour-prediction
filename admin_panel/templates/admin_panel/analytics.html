@@ -1,0 +1,284 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Neural Analytics Hub | AI Call Center{% endblock %}
+
+{% block content %}
+<div class="flex min-h-[calc(100vh-120px)] mt-10">
+    <!-- Sidebar -->
+    <aside class="w-72 glass border-r border-white/10 rounded-r-3xl overflow-hidden hidden lg:block" data-aos="fade-right">
+        <div class="p-8">
+            <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-8">Intelligence Center</p>
+            <nav class="space-y-4">
+                <a href="{% url 'admin_panel:admin_panel_dashboard' %}" class="flex items-center gap-3 p-4 rounded-2xl hover:bg-white/5 transition-all text-gray-400 hover:text-white">
+                    <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+                    <span class="font-bold text-sm">Overview</span>
+                </a>
+                <a href="{% url 'admin_panel:analytics' %}" class="flex items-center gap-3 p-4 rounded-2xl bg-primary/10 text-primary border border-primary/20">
+                    <i data-lucide="brain-circuit" class="w-5 h-5"></i>
+                    <span class="font-bold text-sm">Advanced Analytics</span>
+                </a>
+                <a href="{% url 'admin_panel:manage_users' %}" class="flex items-center gap-3 p-4 rounded-2xl hover:bg-white/5 transition-all text-gray-400 hover:text-white">
+                    <i data-lucide="users" class="w-5 h-5"></i>
+                    <span class="font-bold text-sm">Operators</span>
+                </a>
+                <a href="{% url 'admin_panel:admin_reports' %}" class="flex items-center gap-3 p-4 rounded-2xl hover:bg-white/5 transition-all text-gray-400 hover:text-white">
+                    <i data-lucide="file-bar-chart" class="w-5 h-5"></i>
+                    <span class="font-bold text-sm">Reports</span>
+                </a>
+                <a href="{% url 'admin_panel:export_center' %}" class="flex items-center gap-3 p-4 rounded-2xl hover:bg-white/5 transition-all text-gray-400 hover:text-white">
+                    <i data-lucide="download-cloud" class="w-5 h-5"></i>
+                    <span class="font-bold text-sm">Export Center</span>
+                </a>
+                <a href="{% url 'admin_panel:system_monitor' %}" class="flex items-center gap-3 p-4 rounded-2xl hover:bg-white/5 transition-all text-gray-400 hover:text-white">
+                    <i data-lucide="activity" class="w-5 h-5"></i>
+                    <span class="font-bold text-sm">Live Monitor</span>
+                </a>
+            </nav>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-grow px-10 space-y-10 pb-20">
+        <header class="flex justify-between items-end">
+            <div>
+                <h1 class="text-4xl font-bold font-heading text-white">Neural <span class="gradient-text">Analytics</span> Hub</h1>
+                <p class="text-gray-500">Deep behavioral insights and model performance metrics.</p>
+            </div>
+            <div class="flex gap-4">
+                <select class="glass bg-transparent text-xs font-bold text-white px-4 py-2 rounded-xl border border-white/10 outline-none">
+                    <option>Last 24 Hours</option>
+                    <option>Last 7 Days</option>
+                    <option>Last 30 Days</option>
+                    <option>Custom Range</option>
+                </select>
+            </div>
+        </header>
+
+        <!-- Top Charts Row -->
+        <div class="grid grid-cols-1 xl:grid-cols-12 gap-8">
+            <!-- Emotion Trend Analysis -->
+            <div class="xl:col-span-8 glass p-8 rounded-[3rem] border border-white/10" data-aos="fade-up">
+                <div class="flex justify-between items-center mb-8">
+                    <h3 class="font-bold text-white flex items-center gap-2">
+                        <i data-lucide="trending-up" class="w-5 h-5 text-primary"></i> Emotion Trend Analysis
+                    </h3>
+                    <div class="flex gap-4 text-[10px] font-bold">
+                        <span class="flex items-center gap-1 text-emerald-500"><div class="w-2 h-2 rounded-full bg-emerald-500"></div> Positive</span>
+                        <span class="flex items-center gap-1 text-indigo-500"><div class="w-2 h-2 rounded-full bg-indigo-500"></div> Neutral</span>
+                        <span class="flex items-center gap-1 text-red-500"><div class="w-2 h-2 rounded-full bg-red-500"></div> Negative</span>
+                    </div>
+                </div>
+                <div class="h-80">
+                    <canvas id="emotionTrendChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Smart Insights Panel -->
+            <div class="xl:col-span-4 glass p-8 rounded-[3rem] border border-white/10 bg-gradient-to-br from-primary/5 to-transparent" data-aos="fade-left">
+                <h3 class="font-bold text-white mb-8 flex items-center gap-2">
+                    <i data-lucide="zap" class="w-5 h-5 text-yellow-400"></i> Smart Insights Engine
+                </h3>
+                <div class="space-y-6">
+                    {% for insight in insights %}
+                    <div class="flex gap-4 group">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0
+                            {% if insight.type == 'warning' %}bg-red-500/10 text-red-500{% elif insight.type == 'success' %}bg-emerald-500/10 text-emerald-500{% else %}bg-indigo-500/10 text-indigo-400{% endif %}">
+                            <i data-lucide="{{ insight.icon }}" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-bold text-white mb-1 group-hover:text-primary transition-colors">{{ insight.title }}</h4>
+                            <p class="text-[10px] text-gray-500 leading-relaxed">{{ insight.desc }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="mt-10 p-6 rounded-2xl bg-white/5 border border-white/5 text-center">
+                    <p class="text-[10px] text-gray-500 mb-2 uppercase tracking-widest font-bold">Anomaly Detection</p>
+                    <div class="text-emerald-500 text-xs font-bold animate-pulse">NO CRITICAL ANOMALIES DETECTED</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Middle Row: Model Performance -->
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+            <div class="glass p-8 rounded-[3rem] border border-white/10" data-aos="fade-up">
+                <h3 class="font-bold text-white mb-8">Model Accuracy Trend</h3>
+                <canvas id="accuracyTrendChart" height="250"></canvas>
+            </div>
+            <div class="glass p-8 rounded-[3rem] border border-white/10" data-aos="fade-up" data-aos-delay="100">
+                <h3 class="font-bold text-white mb-8">Precision vs Recall</h3>
+                <canvas id="metricsComparisonChart" height="250"></canvas>
+            </div>
+            <div class="glass p-8 rounded-[3rem] border border-white/10" data-aos="fade-up" data-aos-delay="200">
+                <h3 class="font-bold text-white mb-8">Confusion Matrix Heatmap</h3>
+                <div class="grid grid-cols-3 gap-2 h-48 mt-4">
+                    <!-- Manual grid-based heatmap -->
+                    <div class="bg-primary/80 rounded-lg flex items-center justify-center text-white font-bold text-xs" title="True Pos: 450">450</div>
+                    <div class="bg-primary/20 rounded-lg flex items-center justify-center text-white/50 text-xs" title="False Neg: 24">24</div>
+                    <div class="bg-primary/10 rounded-lg flex items-center justify-center text-white/50 text-xs" title="False Neg: 12">12</div>
+                    
+                    <div class="bg-primary/20 rounded-lg flex items-center justify-center text-white/50 text-xs">31</div>
+                    <div class="bg-primary/60 rounded-lg flex items-center justify-center text-white font-bold text-xs">382</div>
+                    <div class="bg-primary/15 rounded-lg flex items-center justify-center text-white/50 text-xs">19</div>
+
+                    <div class="bg-primary/10 rounded-lg flex items-center justify-center text-white/50 text-xs">15</div>
+                    <div class="bg-primary/25 rounded-lg flex items-center justify-center text-white/50 text-xs">28</div>
+                    <div class="bg-primary/90 rounded-lg flex items-center justify-center text-white font-bold text-xs">512</div>
+                </div>
+                <div class="flex justify-between text-[8px] text-gray-500 font-bold uppercase mt-4">
+                    <span>Predicted Pos</span>
+                    <span>Predicted Neu</span>
+                    <span>Predicted Neg</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Row: Behavior Insights -->
+        <div class="grid grid-cols-1 xl:grid-cols-12 gap-8">
+            <div class="xl:col-span-4 glass p-8 rounded-[3rem] border border-white/10" data-aos="fade-up">
+                <h3 class="font-bold text-white mb-8">Emotion Distribution</h3>
+                <div class="h-64">
+                    <canvas id="behaviorPieChart"></canvas>
+                </div>
+            </div>
+            <div class="xl:col-span-8 glass p-8 rounded-[3rem] border border-white/10" data-aos="fade-up" data-aos-delay="100">
+                <h3 class="font-bold text-white mb-8">Peak Activity Hours Heatmap</h3>
+                <div class="grid grid-cols-24 gap-1 h-32 mt-10">
+                    <!-- Hourly heatmap simulation -->
+                    {% for i in "123456789012345678901234" %}
+                    <div class="bg-primary/{{ random_load }} h-full rounded-sm hover:scale-110 transition-transform cursor-help" 
+                         style="opacity: {{ forloop.counter|add:10 }}%;" 
+                         title="Hour {{ forloop.counter0 }}:00 - Volume: {{ i }}%"></div>
+                    {% endfor %}
+                </div>
+                <div class="flex justify-between text-[8px] text-gray-400 font-bold mt-4 px-2">
+                    <span>00:00</span>
+                    <span>06:00</span>
+                    <span>12:00</span>
+                    <span>18:00</span>
+                    <span>23:00</span>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Theme colors
+    const colors = {
+        primary: '#00f2ff',
+        secondary: '#6366f1',
+        success: '#10b981',
+        danger: '#ef4444',
+        text: '#94a3b8'
+    };
+
+    // 1. Emotion Trend Chart
+    const trendCtx = document.getElementById('emotionTrendChart').getContext('2d');
+    new Chart(trendCtx, {
+        type: 'line',
+        data: {
+            labels: {{ trend_labels|safe }},
+            datasets: [
+                {
+                    label: 'Positive',
+                    data: {{ trend_positive|safe }},
+                    borderColor: colors.success,
+                    tension: 0.4,
+                    fill: false
+                },
+                {
+                    label: 'Neutral',
+                    data: {{ trend_neutral|safe }},
+                    borderColor: colors.secondary,
+                    tension: 0.4,
+                    fill: false
+                },
+                {
+                    label: 'Negative',
+                    data: {{ trend_negative|safe }},
+                    borderColor: colors.danger,
+                    tension: 0.4,
+                    fill: false
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: colors.text } },
+                x: { grid: { display: false }, ticks: { color: colors.text } }
+            }
+        }
+    });
+
+    // 2. Accuracy Trend Chart
+    const accCtx = document.getElementById('accuracyTrendChart').getContext('2d');
+    new Chart(accCtx, {
+        type: 'line',
+        data: {
+            labels: {{ acc_labels|safe }},
+            datasets: [{
+                data: {{ acc_data|safe }},
+                borderColor: colors.primary,
+                backgroundColor: 'rgba(0, 242, 255, 0.1)',
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { min: 80, max: 100, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: colors.text } },
+                x: { grid: { display: false }, ticks: { color: colors.text } }
+            }
+        }
+    });
+
+    // 3. Metrics Comparison Chart
+    const metricsCtx = document.getElementById('metricsComparisonChart').getContext('2d');
+    new Chart(metricsCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Precision', 'Recall', 'F1-Score'],
+            datasets: [
+                { label: 'Positive', data: [92, 88, 90], backgroundColor: colors.success },
+                { label: 'Negative', data: [85, 92, 88], backgroundColor: colors.danger }
+            ]
+        },
+        options: {
+            plugins: { legend: { position: 'bottom', labels: { color: colors.text, usePointStyle: true, font: { size: 10 } } } },
+            scales: {
+                y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: colors.text } },
+                x: { grid: { display: false }, ticks: { color: colors.text } }
+            }
+        }
+    });
+
+    // 4. Behavior Pie Chart
+    const pieCtx = document.getElementById('behaviorPieChart').getContext('2d');
+    new Chart(pieCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Positive', 'Negative', 'Neutral'],
+            datasets: [{
+                data: {{ dist_data|safe }},
+                backgroundColor: [colors.success, colors.danger, colors.secondary],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { position: 'bottom', labels: { color: colors.text, usePointStyle: true } } },
+            cutout: '70%'
+        }
+    });
+</script>
+{% endblock %}

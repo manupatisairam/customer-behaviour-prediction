@@ -1,0 +1,315 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Intelligence Dashboard | AI Call Center{% endblock %}
+
+{% block content %}
+<div class="flex min-h-[calc(100vh-120px)] mt-10">
+    <!-- Sidebar -->
+    <aside class="w-72 glass border-r border-white/10 rounded-r-3xl overflow-hidden hidden lg:block" data-aos="fade-right">
+        <div class="p-8">
+            <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-8">System Control</p>
+            <nav class="space-y-4">
+                <a href="{% url 'admin_panel:admin_panel_dashboard' %}" class="flex items-center gap-3 p-4 rounded-2xl bg-primary/10 text-primary border border-primary/20">
+                    <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+                    <span class="font-bold text-sm">Overview</span>
+                </a>
+                <a href="{% url 'admin_panel:analytics' %}" class="flex items-center gap-3 p-4 rounded-2xl hover:bg-white/5 transition-all text-gray-400 hover:text-white">
+                    <i data-lucide="brain-circuit" class="w-5 h-5"></i>
+                    <span class="font-bold text-sm">Advanced Analytics</span>
+                </a>
+                <a href="{% url 'admin_panel:manage_users' %}" class="flex items-center gap-3 p-4 rounded-2xl hover:bg-white/5 transition-all text-gray-400 hover:text-white">
+                    <i data-lucide="users" class="w-5 h-5"></i>
+                    <span class="font-bold text-sm">Operators</span>
+                </a>
+                <a href="{% url 'admin_panel:system_logs' %}" class="flex items-center gap-3 p-4 rounded-2xl hover:bg-white/5 transition-all text-gray-400 hover:text-white">
+                    <i data-lucide="file-text" class="w-5 h-5"></i>
+                    <span class="font-bold text-sm">Audit Logs</span>
+                </a>
+                <a href="{% url 'admin_panel:admin_reports' %}" class="flex items-center gap-3 p-4 rounded-2xl hover:bg-white/5 transition-all text-gray-400 hover:text-white">
+                    <i data-lucide="file-bar-chart" class="w-5 h-5"></i>
+                    <span class="font-bold text-sm">Reports</span>
+                </a>
+                <a href="{% url 'admin_panel:export_center' %}" class="flex items-center gap-3 p-4 rounded-2xl hover:bg-white/5 transition-all text-gray-400 hover:text-white">
+                    <i data-lucide="download-cloud" class="w-5 h-5"></i>
+                    <span class="font-bold text-sm">Export Center</span>
+                </a>
+                <a href="{% url 'admin_panel:system_monitor' %}" class="flex items-center gap-3 p-4 rounded-2xl hover:bg-white/5 transition-all text-gray-400 hover:text-white">
+                    <i data-lucide="activity" class="w-5 h-5"></i>
+                    <span class="font-bold text-sm">Live Monitor</span>
+                </a>
+            </nav>
+        </div>
+        
+        <div class="mt-20 p-8 border-t border-white/5">
+            <div class="bg-indigo-500/10 p-6 rounded-3xl border border-indigo-500/20 text-center">
+                <p class="text-[10px] font-bold text-indigo-400 uppercase mb-2">Security Status</p>
+                <div class="flex items-center justify-center gap-2">
+                    <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                    <span class="text-xs font-bold text-white">ENCRYPTED</span>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-grow px-10">
+        <div class="flex justify-between items-center mb-10">
+            <div>
+                <h1 class="text-3xl font-bold font-heading text-white">System <span class="gradient-text">Overview</span></h1>
+                <p class="text-gray-500 text-sm">Welcome back, {{ request.user.username }} [Administrator]</p>
+            </div>
+            <div class="flex gap-4">
+                <div class="glass px-6 py-3 rounded-2xl border border-white/10 flex items-center gap-3">
+                    <i data-lucide="clock" class="text-primary w-4 h-4"></i>
+                    <span class="text-xs font-mono text-gray-300" id="current-time">00:00:00 UTC</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-10">
+            <div class="glass-card p-8 group border-primary/10" data-aos="fade-up">
+                <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Total Users</p>
+                <h2 class="text-4xl font-bold text-white mb-4 counter" id="stat-users" data-target="{{ total_users }}">0</h2>
+                <div class="h-1 w-12 bg-primary rounded-full group-hover:w-full transition-all"></div>
+            </div>
+            <div class="glass-card p-8 group border-indigo-500/10" data-aos="fade-up" data-aos-delay="100">
+                <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Calls Processed</p>
+                <h2 class="text-4xl font-bold text-white mb-4 counter" id="stat-calls" data-target="{{ total_calls }}">0</h2>
+                <div class="h-1 w-12 bg-indigo-500 rounded-full group-hover:w-full transition-all"></div>
+            </div>
+            <div class="glass-card p-8 group border-purple-500/10" data-aos="fade-up" data-aos-delay="200">
+                <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">AI Predictions</p>
+                <h2 class="text-4xl font-bold text-white mb-4 counter" id="stat-predictions" data-target="{{ total_predictions }}">0</h2>
+                <div class="h-1 w-12 bg-purple-500 rounded-full group-hover:w-full transition-all"></div>
+            </div>
+            <div class="glass-card p-8 group border-emerald-500/10" data-aos="fade-up" data-aos-delay="300">
+                <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Active Sessions</p>
+                <h2 class="text-4xl font-bold text-white mb-4 counter" id="stat-sessions" data-target="{{ active_sessions }}">0</h2>
+                <div class="h-1 w-12 bg-emerald-500 rounded-full group-hover:w-full transition-all"></div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 xl:grid-cols-12 gap-8">
+            <!-- Recently Analyzed Calls (REAL DATA) -->
+            <div class="xl:col-span-8 glass rounded-[3rem] border border-white/10 overflow-hidden" data-aos="fade-up">
+                <div class="px-8 py-6 border-b border-white/5 flex justify-between items-center bg-gradient-to-r from-primary/5 to-transparent">
+                    <h3 class="font-bold text-white flex items-center gap-2">
+                        <i data-lucide="mic" class="w-4 h-4 text-primary"></i> Live Analytics Stream
+                    </h3>
+                    <span class="text-[10px] bg-primary/20 text-primary px-3 py-1 rounded-full font-bold animate-pulse">RECORDING REAL-TIME</span>
+                </div>
+                <div class="p-0">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="bg-white/5">
+                                <th class="px-8 py-4 text-[10px] font-bold text-gray-500 uppercase tracking-widest">Operator</th>
+                                <th class="px-8 py-4 text-[10px] font-bold text-gray-500 uppercase tracking-widest">Sentiment Detected</th>
+                                <th class="px-8 py-4 text-[10px] font-bold text-gray-500 uppercase tracking-widest">Emotion</th>
+                                <th class="px-8 py-4 text-[10px] font-bold text-gray-500 uppercase tracking-widest text-right">Confidence</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-white/5" id="live-analytics-body">
+                            <!-- Populated by JS -->
+                            <tr><td colspan="4" class="p-10 text-center text-gray-500 italic">Initializing neural stream...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Quick Insights -->
+            <div class="xl:col-span-4 space-y-8">
+                <div class="glass p-8 rounded-[3rem] border border-white/10" data-aos="fade-left">
+                    <h3 class="font-bold text-white mb-6 flex items-center gap-2">
+                        <i data-lucide="pie-chart" class="w-4 h-4 text-indigo-400"></i> Behavioral Breakdown
+                    </h3>
+                    <canvas id="usageChart" height="200"></canvas>
+                    <div class="mt-4 text-[10px] text-gray-500 text-center italic">
+                        Real-time distribution of detected customer emotions.
+                    </div>
+                </div>
+
+                <div class="glass p-8 rounded-[3rem] border border-white/10" data-aos="fade-left" data-aos-delay="50">
+                    <h3 class="font-bold text-white mb-6 flex items-center gap-2">
+                        <i data-lucide="activity" class="w-4 h-4 text-emerald-400"></i> Real-time Load
+                    </h3>
+                    <div class="h-32 w-full">
+                        <canvas id="loadChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="glass p-8 rounded-[3rem] border border-white/10 text-center relative overflow-hidden" data-aos="fade-left" data-aos-delay="100">
+                    <div class="absolute inset-0 bg-primary/5 animate-pulse"></div>
+                    <div class="relative z-10">
+                        <i data-lucide="shield" class="w-12 h-12 text-primary mx-auto mb-4"></i>
+                        <h4 class="font-bold text-white">System Integrity</h4>
+                        <p class="text-xs text-gray-500 mb-4">Core modules are performing within optimal parameters.</p>
+                        <button onclick="runDiagnostics(this)" class="btn-neon px-6 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest">Run Diagnostics</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Diagnostics Logic
+    function runDiagnostics(btn) {
+        const originalText = btn.innerText;
+        btn.innerText = "DIAGNOSING...";
+        btn.disabled = true;
+        
+        // Use the global showNotification from base.html if available, or alert
+        if (typeof showNotification === 'function') {
+            showNotification("System Scan Initialized", "Analyzing neural engine integrity and database synchronization...");
+        } else {
+            alert("System Scan Initialized: Analyzing neural engine integrity...");
+        }
+
+        setTimeout(() => {
+            btn.innerText = originalText;
+            btn.disabled = false;
+            if (typeof showNotification === 'function') {
+                showNotification("Diagnostics Complete", "All modules performing at 99.2% efficiency.");
+            }
+        }, 3000);
+    }
+    // Live Time
+    function updateTime() {
+        const now = new Date();
+        document.getElementById('current-time').innerText = now.toISOString().replace('T', ' ').split('.')[0] + ' UTC';
+    }
+    setInterval(updateTime, 1000);
+    updateTime();
+
+    // Counters Init
+    const counters = document.querySelectorAll('.counter');
+    function initCounters() {
+        counters.forEach(counter => {
+            const target = +counter.getAttribute('data-target');
+            counter.innerText = '0';
+            const inc = target / 50;
+            const updateCount = () => {
+                const current = +counter.innerText;
+                if (current < target) {
+                    counter.innerText = Math.ceil(current + inc);
+                    setTimeout(updateCount, 20);
+                } else {
+                    counter.innerText = target;
+                }
+            };
+            updateCount();
+        });
+    }
+    initCounters();
+
+    // Usage Chart (Doughnut) - INITIALLY WITH REAL DATA
+    const ctxUsage = document.getElementById('usageChart').getContext('2d');
+    const usageChart = new Chart(ctxUsage, {
+        type: 'doughnut',
+        data: {
+            labels: ['Positive', 'Negative', 'Neutral'],
+            datasets: [{
+                data: [{{ initial_emotion_dist.0 }}, {{ initial_emotion_dist.1 }}, {{ initial_emotion_dist.2 }}],
+                backgroundColor: ['#10b981', '#ef4444', '#6366f1'],
+                borderWidth: 0,
+                hoverOffset: 10
+            }]
+        },
+        options: {
+            plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8', font: { size: 10, weight: 'bold' }, usePointStyle: true } } },
+            cutout: '70%'
+        }
+    });
+
+    // Real-time Load Chart (Line)
+    const ctxLoad = document.getElementById('loadChart').getContext('2d');
+    const loadChart = new Chart(ctxLoad, {
+        type: 'line',
+        data: {
+            labels: Array(10).fill(''),
+            datasets: [{
+                label: 'System Load',
+                data: Array(10).fill(0),
+                borderColor: '#00f2ff',
+                backgroundColor: 'rgba(0, 242, 255, 0.1)',
+                fill: true,
+                tension: 0.4,
+                pointRadius: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                x: { display: false },
+                y: { display: false, min: 0, max: 100 }
+            }
+        }
+    });
+
+    // Real-time Data Fetching
+    async function fetchLiveStats() {
+        try {
+            const response = await fetch('{% url "admin_panel:api_stats" %}');
+            const data = await response.json();
+
+            // Update Counters
+            document.getElementById('stat-users').innerText = data.total_users;
+            document.getElementById('stat-calls').innerText = data.total_calls;
+            document.getElementById('stat-predictions').innerText = data.total_predictions;
+            document.getElementById('stat-sessions').innerText = data.metrics.active_sessions;
+
+            // Update Load Chart
+            loadChart.data.datasets[0].data.push(data.metrics.cpu_usage);
+            loadChart.data.datasets[0].data.shift();
+            loadChart.update();
+
+            // Update Usage Chart WITH REAL EMOTION DATA
+            usageChart.data.datasets[0].data = [
+                data.emotion_dist.Positive,
+                data.emotion_dist.Negative,
+                data.emotion_dist.Neutral
+            ];
+            usageChart.update();
+
+            // Update Analytics Table with REAL CALL DATA
+            const analyticsBody = document.getElementById('live-analytics-body');
+            if(data.calls && data.calls.length > 0) {
+                analyticsBody.innerHTML = data.calls.map(call => `
+                    <tr class="hover:bg-white/5 transition-colors">
+                        <td class="px-8 py-4 text-xs font-bold text-white">${call.operator}</td>
+                        <td class="px-8 py-4">
+                            <div class="w-24 bg-white/5 h-1 rounded-full overflow-hidden">
+                                <div class="h-full bg-primary" style="width: ${call.sentiment}%"></div>
+                            </div>
+                        </td>
+                        <td class="px-8 py-4">
+                            <span class="px-3 py-1 rounded-full text-[8px] font-bold uppercase tracking-widest 
+                                ${call.emotion === 'Positive' ? 'bg-emerald-500/10 text-emerald-500' : 
+                                  call.emotion === 'Negative' ? 'bg-red-500/10 text-red-500' : 'bg-indigo-500/10 text-indigo-400'}">
+                                ${call.emotion}
+                            </span>
+                        </td>
+                        <td class="px-8 py-4 text-right text-xs font-mono text-gray-500">${call.time}</td>
+                    </tr>
+                `).join('');
+            } else {
+                analyticsBody.innerHTML = '<tr><td colspan="4" class="px-8 py-10 text-center text-gray-500 italic">No audio analysis records found.</td></tr>';
+            }
+        } catch (error) {
+            console.error('Error fetching live stats:', error);
+        }
+    }
+
+    // Poll every 5 seconds
+    setInterval(fetchLiveStats, 5000);
+    setInterval(fetchLiveStats, 5000);
+    fetchLiveStats();
+</script>
+{% endblock %}

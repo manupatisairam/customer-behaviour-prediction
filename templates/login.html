@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+{% block title %}Login | AI Call Center Analytics{% endblock %}
+
+{% block extra_css %}
+<style>
+  @keyframes card-glow { 0%,100%{box-shadow:0 0 30px rgba(0,242,255,0.05);} 50%{box-shadow:0 0 60px rgba(0,242,255,0.15), 0 0 120px rgba(99,102,241,0.1);} }
+  .login-card { animation: card-glow 4s ease-in-out infinite; }
+
+  @keyframes float-icon { 0%,100%{transform:translateY(0) rotate(0deg);} 50%{transform:translateY(-6px) rotate(5deg);} }
+  .float-icon { animation: float-icon 3s ease-in-out infinite; }
+
+  @keyframes border-spin { to{--angle:360deg;} }
+  @property --angle { syntax:'<angle>'; inherits:false; initial-value:0deg; }
+  .spin-border {
+    background: conic-gradient(from var(--angle), transparent 70%, #00f2ff 85%, #6366f1 95%, transparent 100%);
+    animation: border-spin 3s linear infinite;
+  }
+
+  input[type="text"], input[type="password"], input[type="email"] {
+    width:100%; background:rgba(0,242,255,0.02); border:1px solid rgba(255,255,255,0.06);
+    border-radius:14px; padding:0.95rem 1rem 0.95rem 3rem;
+    outline:none; transition:all .4s ease; color:white; font-size:.9rem; letter-spacing:.04em;
+  }
+  input:focus { border-color:var(--primary); background:rgba(0,242,255,0.05); box-shadow:0 0 0 3px rgba(0,242,255,0.1); }
+  input::placeholder { color:rgba(255,255,255,0.2); }
+
+  @keyframes scan-v { 0%,100%{top:-100%;} 50%{top:200%;} }
+  .scan-v { position:absolute; left:0; width:100%; height:40%; background:linear-gradient(to bottom,transparent,rgba(0,242,255,0.03),transparent); animation:scan-v 6s linear infinite; pointer-events:none; }
+
+  .field-group:focus-within label { color:var(--primary); }
+  .field-group:focus-within .field-icon { color:var(--primary); }
+
+  @keyframes dots { 0%{content:'.'} 33%{content:'..'} 66%{content:'...'} }
+  .loading-dots::after { content:'.'; animation:dots 1.5s steps(1,end) infinite; }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="min-h-screen flex items-center justify-center px-6 relative overflow-hidden py-20">
+
+  <!-- Background accent orbs -->
+  <div class="absolute top-1/4 -left-32 w-80 h-80 bg-secondary/10 rounded-full blur-[100px] pointer-events-none"></div>
+  <div class="absolute bottom-1/4 -right-32 w-96 h-96 bg-primary/8 rounded-full blur-[120px] pointer-events-none"></div>
+
+  <!-- Vertical scan line -->
+  <div class="scan-v"></div>
+
+  <div class="w-full max-w-lg z-10" data-aos="zoom-in" data-aos-duration="800">
+
+    <!-- Spinning border wrapper -->
+    <div class="p-[1px] rounded-[2.5rem] relative" style="background:rgba(255,255,255,0.05)">
+      <div class="absolute inset-0 rounded-[2.5rem] spin-border opacity-40 pointer-events-none"></div>
+
+      <div class="login-card glass p-10 md:p-12 rounded-[2.5rem] relative overflow-hidden">
+
+        <!-- Top scan beam -->
+        <div class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/60 to-transparent"></div>
+
+        <!-- Header -->
+        <div class="text-center mb-10">
+          <div class="w-20 h-20 mx-auto mb-6 relative">
+            <div class="absolute inset-0 bg-primary/10 rounded-2xl border border-primary/20 flex items-center justify-center">
+              <i data-lucide="lock" class="w-9 h-9 text-primary float-icon"></i>
+            </div>
+            <!-- Ping ring -->
+            <div class="absolute -inset-2 border border-primary/20 rounded-3xl animate-ping" style="animation-duration:2.5s"></div>
+          </div>
+          <h1 class="text-3xl font-black font-heading tracking-[0.15em] text-white mb-2 uppercase">AUTHENTICATE</h1>
+          <div class="flex items-center justify-center gap-2 text-[10px] font-mono text-gray-600 uppercase tracking-widest">
+            <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
+            SECURE_CHANNEL_ESTABLISHED
+          </div>
+        </div>
+
+        <!-- Form -->
+        <form method="POST" class="space-y-5">
+          {% csrf_token %}
+
+          {% for field in form %}
+          <div class="field-group relative">
+            <label class="block text-[10px] font-black text-gray-600 mb-2 uppercase tracking-[0.2em] px-1 transition-colors duration-300">{{ field.label }}</label>
+            <div class="relative">
+              <div class="field-icon absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-600 transition-colors duration-300">
+                {% if field.name == 'username' %}
+                  <i data-lucide="user" class="w-4 h-4"></i>
+                {% else %}
+                  <i data-lucide="key-round" class="w-4 h-4"></i>
+                {% endif %}
+              </div>
+              {{ field }}
+            </div>
+            {% for error in field.errors %}
+              <p class="text-[10px] text-red-500 mt-1.5 font-mono uppercase px-1 flex items-center gap-1">
+                <i data-lucide="alert-triangle" class="w-3 h-3"></i> {{ error }}
+              </p>
+            {% endfor %}
+          </div>
+          {% endfor %}
+
+          <!-- Remember / Forgot -->
+          <div class="flex items-center justify-between px-1 pt-1">
+            <label class="flex items-center gap-2.5 cursor-pointer group">
+              <div class="w-4 h-4 rounded border border-white/10 bg-white/5 flex items-center justify-center group-hover:border-primary/50 transition-all">
+                <input type="checkbox" class="hidden peer">
+              </div>
+              <span class="text-[10px] text-gray-500 uppercase tracking-widest group-hover:text-gray-300 transition-colors">Remember me</span>
+            </label>
+            <a href="#" class="text-[10px] text-primary/60 hover:text-primary transition-colors uppercase tracking-widest font-bold">Forgot key?</a>
+          </div>
+
+          <!-- Submit -->
+          <button type="submit" class="btn-premium w-full !py-4 rounded-2xl mt-3 group relative overflow-hidden">
+            <span class="relative z-10 flex items-center justify-center gap-3">
+              <i data-lucide="shield-check" class="w-4 h-4 group-hover:rotate-12 transition-transform"></i>
+              INITIALIZE SESSION
+              <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+            </span>
+          </button>
+        </form>
+
+        <!-- Divider -->
+        <div class="flex items-center gap-4 my-8">
+          <div class="flex-1 h-px bg-white/5"></div>
+          <span class="text-[9px] text-gray-600 uppercase tracking-widest">OR</span>
+          <div class="flex-1 h-px bg-white/5"></div>
+        </div>
+
+        <!-- Register link -->
+        <div class="text-center">
+          <p class="text-[11px] text-gray-600 uppercase tracking-[0.15em]">
+            No access credentials?
+            <a href="{% url 'register' %}" class="text-primary font-black hover:text-white transition-colors ml-1">REGISTER UID →</a>
+          </p>
+        </div>
+
+        <!-- Bottom scan -->
+        <div class="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-secondary/40 to-transparent"></div>
+      </div>
+    </div>
+
+    <!-- Status bar below card -->
+    <div class="mt-6 px-4 flex justify-between items-center text-[9px] font-mono text-gray-700 uppercase tracking-[0.25em]">
+      <span class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span> SYS:READY</span>
+      <span>NODE:ALPHA-01</span>
+      <span>ENC:AES-256</span>
+      <span class="flex items-center gap-1.5">SIG:OPTIMAL <span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span></span>
+    </div>
+
+  </div>
+</section>
+{% endblock %}

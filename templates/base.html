@@ -1,0 +1,536 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}AI Call Center | Customer Behavior Prediction{% endblock %}</title>
+    
+    <!-- Meta Tags -->
+    <meta name="description" content="Advanced AI platform for predicting customer behavior and emotion in call center systems.">
+    <meta name="keywords" content="AI, Call Center, Customer Behavior, Sentiment Analysis, Emotion Detection">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lucide-static@0.321.0/font/lucide.min.css">
+    
+    <style>
+        :root {
+            --primary: #00f2ff; /* Digital Cyan */
+            --secondary: #6366f1; /* Indigo */
+            --accent: #ff00ea; /* Cyber Pink */
+            --dark: #020408; /* Deep Space */
+            --glass: rgba(5, 10, 20, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --neon-glow: 0 0 20px rgba(0, 242, 255, 0.5);
+            --font-main: 'Inter', sans-serif;
+            --font-heading: 'Outfit', sans-serif;
+        }
+        
+        body {
+            font-family: var(--font-main);
+            background-color: var(--dark);
+            color: #f1f5f9;
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .font-heading { font-family: var(--font-heading); }
+
+        /* Custom Animations */
+        @keyframes scan {
+            0% { transform: translateY(-100%); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(100%); opacity: 0; }
+        }
+        
+        @keyframes glow-pulse {
+            0%, 100% { filter: drop-shadow(0 0 5px var(--primary)); }
+            50% { filter: drop-shadow(0 0 20px var(--primary)); }
+        }
+
+        .glass {
+            background: var(--glass);
+            backdrop-filter: blur(16px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #fff 0%, var(--primary) 50%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% auto;
+            animation: text-shine 5s linear infinite;
+        }
+
+        @keyframes text-shine {
+            to { background-position: 200% center; }
+        }
+
+        /* Nav Links */
+        .nav-link {
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: rgba(255,255,255,0.7);
+        }
+        .nav-link:hover {
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            box-shadow: var(--neon-glow);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+        .nav-link:hover::after { width: 80%; }
+
+        /* Unified Button System */
+        .btn-neon, .btn-premium, .btn-logout-neon {
+            position: relative;
+            padding: 0.9rem 2.2rem;
+            border-radius: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            cursor: pointer;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn-neon {
+            background: rgba(0, 242, 255, 0.03);
+            border: 1px solid rgba(0, 242, 255, 0.3);
+            color: var(--primary);
+        }
+        .btn-neon:hover {
+            background: rgba(0, 242, 255, 0.1);
+            border-color: var(--primary);
+            box-shadow: 0 0 30px rgba(0, 242, 255, 0.3);
+            transform: translateY(-3px) scale(1.02);
+        }
+
+        .btn-premium {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: black;
+            border: none;
+            box-shadow: 0 10px 20px rgba(0, 242, 255, 0.2);
+        }
+        .btn-premium:hover {
+            box-shadow: 0 15px 40px rgba(0, 242, 255, 0.5);
+            transform: translateY(-4px) scale(1.03);
+        }
+
+        .btn-logout-neon {
+            background: rgba(239, 68, 68, 0.05);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+        }
+        .btn-logout-neon:hover {
+            background: #ef4444;
+            color: white;
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(239, 68, 68, 0.5);
+        }
+
+        /* Loading System */
+        #preloader {
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            background: var(--dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .loaded #preloader { opacity: 0; visibility: hidden; transition: all 1s ease-out; }
+
+        /* Background Effects */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at center, #0a101f 0%, #020408 100%);
+        }
+
+        .scanline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                to bottom,
+                transparent 50%,
+                rgba(0, 242, 255, 0.02) 50%
+            );
+            background-size: 100% 4px;
+            z-index: 100;
+            pointer-events: none;
+            opacity: 0.5;
+        }
+
+        .noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://grainy-gradients.vercel.app/noise.svg');
+            opacity: 0.05;
+            z-index: 101;
+            pointer-events: none;
+        }
+
+        /* ── Cursor glow follower ── */
+        #cursor-glow {
+            position: fixed; pointer-events: none; z-index: 9999;
+            width: 400px; height: 400px; border-radius: 50%;
+            background: radial-gradient(circle, rgba(0,242,255,0.06) 0%, transparent 70%);
+            transform: translate(-50%,-50%); transition: left .12s ease, top .12s ease;
+            mix-blend-mode: screen;
+        }
+
+        /* ── Page transition overlay ── */
+        #page-transition {
+            position: fixed; inset: 0; z-index: 99998;
+            background: linear-gradient(135deg, #020408, #0a0f1e);
+            transform: translateY(100%);
+            transition: transform .6s cubic-bezier(.76,0,.24,1);
+            pointer-events: none;
+        }
+        #page-transition.active { transform: translateY(0); }
+
+        /* ── Glowing navbar active state ── */
+        .nav-link.active {
+            color: var(--primary);
+        }
+        .nav-link.active::after { width: 80%; }
+
+        /* ── Tooltip ── */
+        [data-tip] { position: relative; }
+        [data-tip]::before {
+            content: attr(data-tip);
+            position: absolute; bottom: calc(100% + 8px); left: 50%;
+            transform: translateX(-50%) scale(.8); transform-origin: bottom center;
+            background: rgba(0,242,255,0.1); border: 1px solid rgba(0,242,255,0.2);
+            color: var(--primary); font-size: 9px; font-weight: 700;
+            letter-spacing: .15em; text-transform: uppercase;
+            padding: 4px 10px; border-radius: 6px; white-space: nowrap;
+            opacity: 0; pointer-events: none;
+            transition: all .25s cubic-bezier(.34,1.56,.64,1);
+        }
+        [data-tip]:hover::before { opacity: 1; transform: translateX(-50%) scale(1); }
+
+        /* ── Smooth counter animation ── */
+        @keyframes count-up { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+        .count-anim { animation: count-up .6s ease forwards; }
+
+        /* ── Hover lift for glass cards ── */
+        .glass-lift {
+            transition: transform .4s cubic-bezier(.34,1.56,.64,1), box-shadow .4s ease;
+        }
+        .glass-lift:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 30px 60px rgba(0,0,0,.5), 0 0 40px rgba(0,242,255,0.08);
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Visual Layers -->
+    <canvas id="bg-canvas"></canvas>
+    <div class="scanline"></div>
+    <div class="noise"></div>
+    <div id="cursor-glow"></div>
+    <div id="page-transition"></div>
+
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="relative flex flex-col items-center">
+            <div class="w-24 h-24 border-2 border-primary/20 border-t-primary rounded-full animate-spin mb-6"></div>
+            <div class="font-mono text-primary text-sm tracking-[0.5em] animate-pulse">SYSTEM_BOOTING...</div>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="sticky top-6 z-50 mx-auto w-[90%] max-w-7xl rounded-2xl glass border border-white/5 px-8 py-5 mt-6 transition-all duration-500 hover:border-primary/20">
+        <div class="flex justify-between items-center">
+            <a href="{% url 'home' %}" class="text-2xl font-bold font-heading gradient-text flex items-center gap-3">
+                <i data-lucide="brain-circuit" class="w-8 h-8 text-primary"></i>
+                AI CallCenter
+            </a>
+            
+            <div class="hidden md:flex items-center gap-8">
+                {% if user.is_authenticated %}
+                    {% if not is_admin_page and request.resolver_match.url_name != 'about' %}
+                        <a href="{% url 'dashboard' %}" class="nav-link text-sm font-bold uppercase tracking-widest">
+                            <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard
+                        </a>
+                        <a href="{% url 'upload_audio' %}" class="nav-link text-sm font-bold uppercase tracking-widest">
+                            <i data-lucide="mic" class="w-4 h-4"></i> Analytics
+                        </a>
+                        <a href="{% url 'prediction_history' %}" class="nav-link text-sm font-bold uppercase tracking-widest">
+                            <i data-lucide="brain" class="w-4 h-4 text-primary"></i> Predictions
+                        </a>
+                    {% endif %}
+                    
+                    {% if request.resolver_match.url_name != 'about' %}
+                    <a href="{% url 'logout' %}" class="btn-logout-neon px-6 py-2 rounded-full font-medium flex items-center gap-2">
+                        <span class="scan-line"></span>
+                        <i data-lucide="log-out" class="w-4 h-4"></i> Logout
+                    </a>
+                    {% else %}
+                        <a href="{% url 'home' %}" class="nav-link font-medium"><i data-lucide="home"></i> Home</a>
+                        <a href="{% url 'login' %}?reauth=1" class="btn-premium px-8 py-2.5 rounded-full font-bold ml-4 group flex items-center gap-2 shadow-[0_0_20px_rgba(0,242,255,0.3)] hover:shadow-[0_0_35px_rgba(0,242,255,0.6)] transition-all">
+                            <span class="scan-line"></span>
+                            <i data-lucide="log-in" class="w-5 h-5 group-hover:rotate-12 transition-transform"></i> 
+                            <span>User Login</span>
+                        </a>
+                    {% endif %}
+                {% else %}
+                    <a href="{% url 'home' %}" class="nav-link font-medium"><i data-lucide="home"></i> Home</a>
+                    <a href="{% url 'about' %}" class="nav-link font-medium"><i data-lucide="info"></i> About</a>
+                    <a href="{% url 'admin_login' %}" class="nav-link font-medium text-red-400"><i data-lucide="shield-check"></i> Admin Portal</a>
+                    <a href="{% url 'login' %}" class="btn-premium px-8 py-2.5 rounded-full font-bold ml-4 group flex items-center gap-2 shadow-[0_0_20px_rgba(0,242,255,0.3)] hover:shadow-[0_0_35px_rgba(0,242,255,0.6)] transition-all">
+                        <span class="scan-line"></span>
+                        <i data-lucide="log-in" class="w-5 h-5 group-hover:rotate-12 transition-transform"></i> 
+                        <span>User Login</span>
+                    </a>
+{% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <main class="relative z-10">
+        <!-- Messages Notification Banner -->
+        {% if messages %}
+            <div class="max-w-4xl mx-auto px-6 pt-6 space-y-3 z-50 relative" id="django-messages-container">
+                {% for message in messages %}
+                    <div class="flex items-center justify-between p-4 rounded-2xl border text-sm font-medium backdrop-blur-xl shadow-2xl transition-all duration-300
+                        {% if message.tags == 'error' %}
+                            bg-red-500/10 border-red-500/30 text-red-300
+                        {% elif message.tags == 'success' %}
+                            bg-emerald-500/10 border-emerald-500/30 text-emerald-300
+                        {% elif message.tags == 'warning' %}
+                            bg-yellow-500/10 border-yellow-500/30 text-yellow-300
+                        {% else %}
+                            bg-cyan-500/10 border-cyan-500/30 text-cyan-300
+                        {% endif %}">
+                        <div class="flex items-center gap-3">
+                            {% if message.tags == 'error' %}
+                                <i data-lucide="alert-triangle" class="w-5 h-5 text-red-400 shrink-0"></i>
+                            {% elif message.tags == 'success' %}
+                                <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-400 shrink-0"></i>
+                            {% elif message.tags == 'warning' %}
+                                <i data-lucide="alert-circle" class="w-5 h-5 text-yellow-400 shrink-0"></i>
+                            {% else %}
+                                <i data-lucide="info" class="w-5 h-5 text-cyan-400 shrink-0"></i>
+                            {% endif %}
+                            <span>{{ message }}</span>
+                        </div>
+                        <button type="button" onclick="this.parentElement.remove()" class="text-gray-400 hover:text-white p-1 rounded-lg transition-colors">
+                            <i data-lucide="x" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="py-16 border-t border-white/5 glass mt-32 relative z-10">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8">
+            <div class="text-left">
+                <div class="text-xl font-bold text-white mb-2 font-heading">AI_CALL_CENTER</div>
+                <p class="text-gray-500 text-sm max-w-xs">Autonomous behavioral analysis engine powered by next-generation neural networks.</p>
+            </div>
+            <div class="text-xs font-mono text-gray-600 uppercase tracking-widest">
+                System Status: <span class="text-green-500">Optimal</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        lucide.createIcons();
+        AOS.init({ duration: 1000, once: true });
+
+        window.addEventListener('load', () => {
+            document.body.classList.add('loaded');
+        });
+
+        // ── Neural Flow Background Animation ──
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height, nodes, connections, particles;
+
+        function init() {
+            width  = canvas.width  = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            nodes = []; connections = []; particles = [];
+
+            // Hub nodes with pulsing glow
+            for (let i = 0; i < 15; i++) {
+                nodes.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    radius: Math.random() * 4 + 2,
+                    color: i % 3 === 0 ? '#00f2ff' : (i % 3 === 1 ? '#6366f1' : '#ff00ea'),
+                    pulse: Math.random() * Math.PI,
+                    pulseSpeed: 0.02 + Math.random() * 0.03
+                });
+            }
+
+            // Build connections based on proximity
+            for (let i = 0; i < nodes.length; i++) {
+                for (let j = i + 1; j < nodes.length; j++) {
+                    const dx = nodes[i].x - nodes[j].x;
+                    const dy = nodes[i].y - nodes[j].y;
+                    if (Math.sqrt(dx*dx + dy*dy) < 500 && Math.random() > 0.4) {
+                        connections.push({ from: nodes[i], to: nodes[j] });
+                    }
+                }
+            }
+
+            // Seed initial data packets
+            for (let i = 0; i < 80; i++) spawnParticle();
+        }
+
+        function spawnParticle() {
+            if (!connections.length) return;
+            const conn = connections[Math.floor(Math.random() * connections.length)];
+            particles.push({
+                conn,
+                progress: 0,
+                speed: 0.002 + Math.random() * 0.005,
+                size: Math.random() * 2 + 1,
+                color: conn.from.color
+            });
+        }
+
+        function draw() {
+            ctx.fillStyle = 'rgba(2, 4, 8, 0.15)';
+            ctx.fillRect(0, 0, width, height);
+
+            // Connection lines
+            ctx.beginPath();
+            ctx.strokeStyle = 'rgba(0, 242, 255, 0.05)';
+            ctx.lineWidth = 1;
+            connections.forEach(c => {
+                ctx.moveTo(c.from.x, c.from.y);
+                ctx.lineTo(c.to.x, c.to.y);
+            });
+            ctx.stroke();
+
+            // Pulsing hub nodes
+            nodes.forEach(n => {
+                n.pulse += n.pulseSpeed;
+                const s = 1 + Math.sin(n.pulse) * 0.3;
+                ctx.beginPath();
+                ctx.arc(n.x, n.y, n.radius * s, 0, Math.PI * 2);
+                ctx.fillStyle = n.color;
+                ctx.shadowBlur = 15 * s;
+                ctx.shadowColor = n.color;
+                ctx.fill();
+                ctx.shadowBlur = 0;
+            });
+
+            // Traveling data packets with gradient trails
+            particles.forEach((p, idx) => {
+                p.progress += p.speed;
+                if (p.progress >= 1) { particles.splice(idx, 1); spawnParticle(); return; }
+
+                const x = p.conn.from.x + (p.conn.to.x - p.conn.from.x) * p.progress;
+                const y = p.conn.from.y + (p.conn.to.y - p.conn.from.y) * p.progress;
+
+                // Packet dot
+                ctx.beginPath();
+                ctx.arc(x, y, p.size, 0, Math.PI * 2);
+                ctx.fillStyle = p.color;
+                ctx.shadowBlur = 12;
+                ctx.shadowColor = p.color;
+                ctx.fill();
+                ctx.shadowBlur = 0;
+
+                // Gradient trail
+                const trailP = Math.max(0, p.progress - 0.12);
+                const tx = p.conn.from.x + (p.conn.to.x - p.conn.from.x) * trailP;
+                const ty = p.conn.from.y + (p.conn.to.y - p.conn.from.y) * trailP;
+                const grad = ctx.createLinearGradient(x, y, tx, ty);
+                grad.addColorStop(0, p.color);
+                grad.addColorStop(1, 'transparent');
+                ctx.beginPath();
+                ctx.moveTo(x, y);
+                ctx.lineTo(tx, ty);
+                ctx.strokeStyle = grad;
+                ctx.lineWidth = p.size;
+                ctx.stroke();
+            });
+
+            requestAnimationFrame(draw);
+        }
+
+        window.addEventListener('resize', init);
+        init();
+        draw();
+
+        // ── Cursor glow follower ──
+        const glow = document.getElementById('cursor-glow');
+        document.addEventListener('mousemove', e => {
+            glow.style.left = e.clientX + 'px';
+            glow.style.top  = e.clientY + 'px';
+        });
+
+        // ── Page transition on link clicks ──
+        const pt = document.getElementById('page-transition');
+        document.querySelectorAll('a[href]').forEach(a => {
+            const href = a.getAttribute('href');
+            if (!href || href.startsWith('#') || href.startsWith('mailto') || href.startsWith('javascript') || a.target === '_blank') return;
+            a.addEventListener('click', e => {
+                e.preventDefault();
+                pt.classList.add('active');
+                setTimeout(() => { window.location.href = href; }, 550);
+            });
+        });
+        window.addEventListener('pageshow', () => pt.classList.remove('active'));
+
+        // ── Mark active nav link ──
+        document.querySelectorAll('.nav-link').forEach(link => {
+            if (link.href && window.location.pathname === new URL(link.href, location.origin).pathname) {
+                link.classList.add('active');
+            }
+        });
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

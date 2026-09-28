@@ -1,0 +1,300 @@
+{% extends 'base.html' %}
+{% block title %}Home | AI Call Center Analytics{% endblock %}
+
+{% block extra_css %}
+<style>
+  /* Floating orbs */
+  .orb { position: absolute; border-radius: 50%; filter: blur(80px); animation: orb-float 8s ease-in-out infinite; pointer-events: none; }
+  @keyframes orb-float { 0%,100%{transform:translateY(0) scale(1);} 50%{transform:translateY(-40px) scale(1.1);} }
+
+  /* Typewriter cursor */
+  .typewriter { border-right: 3px solid var(--primary); animation: blink .7s step-end infinite; }
+  @keyframes blink { 50%{border-color:transparent;} }
+
+  /* Stat counter glow */
+  .stat-val { font-family:'Outfit',sans-serif; font-weight:900; font-size:clamp(2.5rem,6vw,5rem); background:linear-gradient(135deg,#fff,var(--primary)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+
+  /* Animated border card */
+  .anim-card { position:relative; }
+  .anim-card::before { content:''; position:absolute; inset:-1px; border-radius:inherit; background:conic-gradient(from var(--a),transparent 30%,var(--primary) 50%,transparent 70%); animation:spin-border 4s linear infinite; z-index:0; opacity:0; transition:opacity .4s; }
+  .anim-card:hover::before { opacity:1; }
+  .anim-card::after { content:''; position:absolute; inset:1px; border-radius:inherit; background:rgba(5,10,20,.95); z-index:1; }
+  .anim-card > * { position:relative; z-index:2; }
+  @property --a { syntax:'<angle>'; inherits:false; initial-value:0deg; }
+  @keyframes spin-border { to{--a:360deg;} }
+
+  /* Pipeline connector */
+  .pipe-line { height:2px; flex:1; background:linear-gradient(90deg,var(--primary)/30,var(--primary),var(--primary)/30); position:relative; overflow:hidden; }
+  .pipe-line::after { content:''; position:absolute; left:-60%; top:0; height:100%; width:60%; background:linear-gradient(90deg,transparent,#fff,transparent); animation:pipe-flow 2s linear infinite; }
+  @keyframes pipe-flow { to{left:160%;} }
+
+  /* Floating badge */
+  @keyframes badge-float { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-8px);} }
+  .badge-float { animation:badge-float 3s ease-in-out infinite; }
+
+  /* Scroll indicator */
+  @keyframes scroll-bounce { 0%,100%{transform:translateY(0);opacity:1;} 50%{transform:translateY(8px);opacity:.4;} }
+  .scroll-ind { animation:scroll-bounce 1.6s ease-in-out infinite; }
+
+  /* Glow text flicker */
+  @keyframes flicker { 0%,100%{text-shadow:0 0 8px var(--primary);} 50%{text-shadow:0 0 24px var(--primary), 0 0 60px var(--secondary);} }
+  .neon-flicker { animation:flicker 3s ease-in-out infinite; color:var(--primary); }
+
+  /* Timeline dot pulse */
+  @keyframes tl-pulse { 0%,100%{box-shadow:0 0 0 0 rgba(0,242,255,.5);} 70%{box-shadow:0 0 0 10px rgba(0,242,255,0);} }
+  .tl-dot { animation:tl-pulse 2s infinite; }
+
+  /* Marquee */
+  .marquee-track { display:flex; gap:3rem; animation:marquee 20s linear infinite; width:max-content; }
+  @keyframes marquee { to{transform:translateX(-50%);} }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- ═══════════════════ HERO ═══════════════════ -->
+<section class="relative min-h-screen flex items-center justify-center overflow-hidden px-6 pt-16">
+  <!-- Floating orbs -->
+  <div class="orb w-96 h-96 bg-primary/10 top-10 -left-20" style="animation-delay:0s"></div>
+  <div class="orb w-80 h-80 bg-secondary/15 bottom-10 -right-20" style="animation-delay:3s"></div>
+  <div class="orb w-64 h-64 bg-accent/10 top-1/2 left-1/2 -translate-x-1/2" style="animation-delay:5s"></div>
+
+  <!-- Corner accents -->
+  <div class="absolute top-32 left-8 w-16 h-16 border-t-2 border-l-2 border-primary/40 rounded-tl-2xl hidden lg:block"></div>
+  <div class="absolute bottom-32 right-8 w-16 h-16 border-b-2 border-r-2 border-secondary/40 rounded-br-2xl hidden lg:block"></div>
+
+  <div class="max-w-6xl w-full text-center z-10">
+    <!-- Live badge -->
+    <div class="inline-flex items-center gap-3 px-6 py-2 rounded-full glass border border-primary/20 text-primary text-[10px] font-black tracking-[0.4em] uppercase mb-10" data-aos="fade-down">
+      <span class="relative flex h-2 w-2">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+        <span class="relative inline-flex h-2 w-2 rounded-full bg-primary"></span>
+      </span>
+      NEURAL_CORE_V4.2 &nbsp;·&nbsp; SYSTEM ONLINE
+    </div>
+
+    <!-- Main heading -->
+    <h1 class="font-heading font-black tracking-tighter leading-[0.85] mb-8" style="font-size:clamp(3rem,10vw,8rem)">
+      <span class="block text-white" data-aos="fade-down" data-aos-delay="100">REVOLUTIONIZING</span>
+      <span class="gradient-text block" data-aos="fade-up" data-aos-delay="300">CUSTOMER BEHAVIOR</span>
+    </h1>
+
+    <!-- Subtitle with typewriter effect -->
+    <div class="mb-10" data-aos="fade-up" data-aos-delay="400">
+      <h2 class="text-xs md:text-sm text-primary font-bold tracking-[0.35em] uppercase border-y border-primary/20 py-4 inline-block px-8">
+        SOLUTION FOR PREDICTION OF CUSTOMER BEHAVIOR IN CALL CENTER SYSTEMS
+      </h2>
+    </div>
+
+    <p class="max-w-2xl mx-auto text-lg text-gray-400 mb-14 leading-relaxed font-light" data-aos="fade-up" data-aos-delay="500">
+      Harnessing <span class="text-white font-semibold italic">Deep Behavioral Neural Networks</span> to decode customer intent and emotional subtext in real-time — before a single word is spoken.
+    </p>
+
+    <!-- CTA buttons -->
+    <div class="flex flex-col sm:flex-row gap-5 justify-center items-center mb-20" data-aos="fade-up" data-aos-delay="600">
+      <a href="{% url 'login' %}" class="btn-premium !py-5 !px-12 rounded-2xl group relative overflow-hidden">
+        <span class="relative z-10 flex items-center gap-3">INITIALIZE NEURAL LINK <i data-lucide="zap" class="w-5 h-5 group-hover:rotate-12 transition-transform"></i></span>
+      </a>
+      <a href="{% url 'about' %}" class="btn-neon !py-5 !px-12 rounded-2xl group">
+        <i data-lucide="layers" class="w-5 h-5 group-hover:-rotate-12 transition-transform"></i>
+        <span>SYSTEM OVERVIEW</span>
+      </a>
+    </div>
+
+    <!-- Scroll indicator -->
+    <div class="flex flex-col items-center gap-2 scroll-ind opacity-50" data-aos="fade-up" data-aos-delay="800">
+      <span class="text-[9px] text-gray-500 uppercase tracking-widest">Scroll to Explore</span>
+      <i data-lucide="chevrons-down" class="w-4 h-4 text-primary"></i>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ LIVE STATS ═══════════════════ -->
+<section class="py-20 relative">
+  <!-- Full-width divider line -->
+  <div class="w-full h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent mb-16"></div>
+
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="glass rounded-3xl p-8 text-center group hover:border-primary/30 transition-all duration-500" data-aos="fade-up" data-aos-delay="100">
+        <div class="stat-val mb-1" id="stat-1">99.8%</div>
+        <div class="text-[10px] text-primary font-bold tracking-[0.3em] uppercase">Accuracy Rating</div>
+        <div class="mt-3 h-1 rounded-full bg-white/5 overflow-hidden"><div class="h-full bg-gradient-to-r from-primary to-secondary rounded-full w-0 group-hover:w-full transition-all duration-1000"></div></div>
+      </div>
+      <div class="glass rounded-3xl p-8 text-center group hover:border-secondary/30 transition-all duration-500" data-aos="fade-up" data-aos-delay="200">
+        <div class="stat-val mb-1" style="background:linear-gradient(135deg,#fff,#6366f1);-webkit-background-clip:text">15ms</div>
+        <div class="text-[10px] text-secondary font-bold tracking-[0.3em] uppercase">Latency Threshold</div>
+        <div class="mt-3 h-1 rounded-full bg-white/5 overflow-hidden"><div class="h-full bg-gradient-to-r from-secondary to-primary rounded-full w-0 group-hover:w-full transition-all duration-1000"></div></div>
+      </div>
+      <div class="glass rounded-3xl p-8 text-center group hover:border-accent/30 transition-all duration-500" data-aos="fade-up" data-aos-delay="300">
+        <div class="stat-val mb-1" style="background:linear-gradient(135deg,#fff,#ff00ea);-webkit-background-clip:text">4.2M</div>
+        <div class="text-[10px] text-accent font-bold tracking-[0.3em] uppercase">Packets / Sec</div>
+        <div class="mt-3 h-1 rounded-full bg-white/5 overflow-hidden"><div class="h-full bg-gradient-to-r from-accent to-secondary rounded-full w-0 group-hover:w-full transition-all duration-1000"></div></div>
+      </div>
+      <div class="glass rounded-3xl p-8 text-center group hover:border-white/20 transition-all duration-500" data-aos="fade-up" data-aos-delay="400">
+        <div class="stat-val mb-1" style="background:linear-gradient(135deg,#fff,#94a3b8);-webkit-background-clip:text">∞</div>
+        <div class="text-[10px] text-gray-500 font-bold tracking-[0.3em] uppercase">Scalability</div>
+        <div class="mt-3 h-1 rounded-full bg-white/5 overflow-hidden"><div class="h-full bg-gradient-to-r from-gray-500 to-gray-300 rounded-full w-0 group-hover:w-full transition-all duration-1000"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="w-full h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent mt-16"></div>
+</section>
+
+<!-- ═══════════════════ WORKFLOW PIPELINE ═══════════════════ -->
+<section class="py-24 relative overflow-hidden">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="text-center mb-16" data-aos="fade-up">
+      <div class="neon-flicker text-xs font-black tracking-[0.4em] uppercase mb-4">HOW IT WORKS</div>
+      <h2 class="text-4xl md:text-6xl font-black font-heading tracking-tighter text-white mb-4">
+        The Neural <span class="gradient-text">Pipeline</span>
+      </h2>
+      <p class="text-gray-500 max-w-xl mx-auto">Five intelligent processing stages working in perfect synchrony</p>
+    </div>
+
+    <!-- Pipeline row -->
+    <div class="flex items-center justify-between gap-0 mb-16 overflow-x-auto pb-4" data-aos="fade-up" data-aos-delay="200">
+      {% for step in "12345" %}
+      <div class="flex-shrink-0 text-center w-28">
+        <div class="w-14 h-14 rounded-2xl mx-auto flex items-center justify-center border border-primary/30 bg-primary/5 text-primary font-black font-heading text-lg mb-3 hover:bg-primary/20 hover:scale-110 transition-all duration-300 cursor-default">
+          0{{ step }}
+        </div>
+        <div class="text-[10px] text-gray-500 uppercase tracking-widest leading-tight">
+          {% if step == "1" %}Audio<br>Capture
+          {% elif step == "2" %}Signal<br>Process
+          {% elif step == "3" %}NLP<br>Engine
+          {% elif step == "4" %}Emotion<br>Map
+          {% else %}Insight<br>Output{% endif %}
+        </div>
+      </div>
+      {% if not forloop.last %}
+      <div class="pipe-line mx-1 hidden md:block"></div>
+      {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ FEATURE CARDS ═══════════════════ -->
+<section class="py-16 px-6 max-w-7xl mx-auto relative">
+  <div class="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
+    <div data-aos="fade-right">
+      <div class="text-xs text-primary font-black tracking-[0.4em] uppercase mb-3">CAPABILITIES</div>
+      <h2 class="text-4xl md:text-5xl font-black font-heading uppercase tracking-tight">Core Intelligence<br><span class="text-primary">Modules</span></h2>
+    </div>
+    <div class="hidden md:block h-px flex-grow bg-gradient-to-r from-primary/20 to-transparent mb-4 mx-10"></div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    {% for item in "1234" %}
+    <div class="anim-card rounded-[2rem] overflow-hidden group" style="--a:0deg" data-aos="fade-up" data-aos-delay="{{ forloop.counter|add:'0' }}00">
+      <div class="glass p-9 h-full rounded-[2rem] border border-white/5 group-hover:border-transparent transition-all duration-500 relative overflow-hidden">
+        <!-- glow blob -->
+        <div class="absolute -top-8 -right-8 w-28 h-28 rounded-full blur-3xl transition-all duration-500
+          {% if forloop.counter == 1 %}bg-primary/5 group-hover:bg-primary/15{% elif forloop.counter == 2 %}bg-secondary/5 group-hover:bg-secondary/15{% elif forloop.counter == 3 %}bg-primary/5 group-hover:bg-primary/15{% else %}bg-accent/5 group-hover:bg-accent/15{% endif %}">
+        </div>
+        <!-- watermark number -->
+        <div class="absolute bottom-4 right-5 text-7xl font-black font-heading opacity-5 group-hover:opacity-10 transition-opacity select-none">0{{ forloop.counter }}</div>
+
+        <!-- icon -->
+        <div class="w-14 h-14 rounded-xl flex items-center justify-center mb-7 group-hover:scale-110 transition-transform duration-300 border
+          {% if forloop.counter == 1 %}bg-primary/10 border-primary/20{% elif forloop.counter == 2 %}bg-secondary/10 border-secondary/20{% elif forloop.counter == 3 %}bg-primary/10 border-primary/20{% else %}bg-accent/10 border-accent/20{% endif %}">
+          <i data-lucide="{% if forloop.counter == 1 %}audio-waveform{% elif forloop.counter == 2 %}heart-pulse{% elif forloop.counter == 3 %}zap{% else %}lightbulb{% endif %}"
+             class="w-7 h-7 {% if forloop.counter == 1 %}text-primary{% elif forloop.counter == 2 %}text-secondary{% elif forloop.counter == 3 %}text-primary{% else %}text-accent{% endif %}"></i>
+        </div>
+
+        <h3 class="text-lg font-bold font-heading uppercase tracking-wide mb-3">
+          {% if forloop.counter == 1 %}Speech Analytics{% elif forloop.counter == 2 %}Emotion Detection{% elif forloop.counter == 3 %}Real-time Prediction{% else %}AI Guidance{% endif %}
+        </h3>
+        <p class="text-gray-500 text-sm leading-relaxed">
+          {% if forloop.counter == 1 %}Advanced NLP to convert raw voice streams into actionable strategic insights.
+          {% elif forloop.counter == 2 %}Monitor sentiment and emotional cues to optimize agent-customer rapport.
+          {% elif forloop.counter == 3 %}Forecast churn or resolution likelihood as the conversation happens live.
+          {% else %}Smart agent suggestions to guide conversations toward positive outcomes.{% endif %}
+        </p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- ═══════════════════ SCROLLING MARQUEE ═══════════════════ -->
+<section class="py-12 overflow-hidden border-y border-white/5 my-16">
+  <div class="marquee-track text-[11px] font-black tracking-[0.3em] text-white/20 uppercase">
+    {% for _ in "123456" %}
+    <span>Speech Recognition</span><span class="text-primary mx-4">◆</span>
+    <span>Emotion AI</span><span class="text-secondary mx-4">◆</span>
+    <span>Behavioral Prediction</span><span class="text-accent mx-4">◆</span>
+    <span>Neural Networks</span><span class="text-primary mx-4">◆</span>
+    <span>Real-time Analytics</span><span class="text-secondary mx-4">◆</span>
+    <span>Sentiment Analysis</span><span class="text-accent mx-4">◆</span>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- ═══════════════════ TIMELINE ═══════════════════ -->
+<section class="py-24 px-6 max-w-5xl mx-auto">
+  <div class="text-center mb-16" data-aos="fade-up">
+    <div class="neon-flicker text-xs font-black tracking-[0.4em] uppercase mb-4">INTELLIGENCE ROADMAP</div>
+    <h2 class="text-4xl font-black font-heading text-white">System <span class="gradient-text">Evolution</span></h2>
+  </div>
+
+  <div class="relative pl-8 border-l border-primary/20 space-y-12">
+    {% for ev in "1234" %}
+    <div class="relative" data-aos="fade-left" data-aos-delay="{{ forloop.counter|add:'0' }}00">
+      <!-- dot -->
+      <div class="tl-dot absolute -left-[2.15rem] top-1 w-4 h-4 rounded-full border-2
+        {% if forloop.counter == 1 %}border-primary bg-primary/20{% elif forloop.counter == 2 %}border-secondary bg-secondary/20{% elif forloop.counter == 3 %}border-accent bg-accent/20{% else %}border-primary bg-primary/20{% endif %}">
+      </div>
+      <div class="glass rounded-2xl p-7 hover:border-primary/20 transition-all duration-500 group">
+        <div class="text-[10px] font-black tracking-widest uppercase mb-2
+          {% if forloop.counter == 1 %}text-primary{% elif forloop.counter == 2 %}text-secondary{% elif forloop.counter == 3 %}text-accent{% else %}text-primary{% endif %}">
+          {% if forloop.counter == 1 %}Phase 01 — Foundation{% elif forloop.counter == 2 %}Phase 02 — Intelligence{% elif forloop.counter == 3 %}Phase 03 — Integration{% else %}Phase 04 — Autonomy{% endif %}
+        </div>
+        <h4 class="text-xl font-bold text-white font-heading mb-2">
+          {% if forloop.counter == 1 %}Audio Ingestion & Transcription
+          {% elif forloop.counter == 2 %}Emotion & Sentiment Modeling
+          {% elif forloop.counter == 3 %}Real-time Dashboard & Alerts
+          {% else %}Full Autonomous Agent Assistance{% endif %}
+        </h4>
+        <p class="text-gray-500 text-sm">
+          {% if forloop.counter == 1 %}High-fidelity audio capture with multi-channel processing and noise cancellation.
+          {% elif forloop.counter == 2 %}Deep neural classifiers trained on millions of behavioral data points.
+          {% elif forloop.counter == 3 %}Live WebSocket feeds pushing insights directly to agent screens.
+          {% else %}AI co-pilot that autonomously suggests responses and escalation paths.{% endif %}
+        </p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- ═══════════════════ CTA BANNER ═══════════════════ -->
+<section class="py-20 px-6 max-w-7xl mx-auto" data-aos="zoom-in">
+  <div class="glass rounded-[3rem] p-12 md:p-20 text-center relative overflow-hidden border border-primary/10">
+    <!-- Animated gradient background -->
+    <div class="absolute inset-0 opacity-10">
+      <div class="orb w-96 h-96 bg-primary/50 -top-20 -left-20" style="animation-duration:6s"></div>
+      <div class="orb w-80 h-80 bg-secondary/50 -bottom-20 -right-20" style="animation-duration:8s;animation-delay:2s"></div>
+    </div>
+
+    <div class="relative z-10">
+      <div class="neon-flicker text-xs font-black tracking-[0.4em] uppercase mb-6">READY TO TRANSFORM?</div>
+      <h2 class="text-4xl md:text-6xl font-black font-heading text-white mb-6 tracking-tighter">
+        Deploy AI Intelligence<br><span class="gradient-text">In Minutes.</span>
+      </h2>
+      <p class="text-gray-400 text-lg mb-10 max-w-xl mx-auto">No hardware. No complex setup. Just plug your call center in and let the neural engine do the rest.</p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="{% url 'login' %}" class="btn-premium !py-5 !px-14 rounded-2xl group">
+          GET STARTED NOW <i data-lucide="arrow-right" class="w-5 h-5 group-hover:translate-x-2 transition-transform"></i>
+        </a>
+        <a href="{% url 'about' %}" class="btn-neon !py-5 !px-10 rounded-2xl">
+          <i data-lucide="info" class="w-4 h-4"></i> Learn More
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

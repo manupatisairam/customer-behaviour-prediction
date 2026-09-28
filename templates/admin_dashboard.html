@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Control Center | AI Call Center{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-6 py-12">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6">
+        <div data-aos="fade-right">
+            <h1 class="text-4xl font-bold font-heading gradient-text mb-2">Admin Control Center</h1>
+            <p class="text-gray-400">System hierarchy and user role management</p>
+        </div>
+        
+        <div class="flex gap-4" data-aos="fade-left">
+            <div class="glass px-6 py-3 rounded-2xl border border-white/10 flex items-center gap-4">
+                <div class="p-2 bg-indigo-500/20 rounded-lg text-indigo-400">
+                    <i data-lucide="users" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <div class="text-xs text-gray-500 uppercase tracking-wider">Total Users</div>
+                    <div class="text-xl font-bold">{{ all_users|length }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Management Table -->
+    <div class="glass rounded-3xl border border-white/10 overflow-hidden" data-aos="fade-up">
+        <div class="p-6 border-b border-white/10 bg-white/5 flex justify-between items-center">
+            <h2 class="text-xl font-bold flex items-center gap-3">
+                <i data-lucide="shield-check" class="text-primary"></i>
+                User Access Matrix
+            </h2>
+            <div class="relative">
+                <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500"></i>
+                <input type="text" placeholder="Filter users..." class="bg-black/20 border border-white/10 rounded-full py-2 pl-10 pr-4 text-sm focus:outline-none focus:border-primary/50 w-64">
+            </div>
+        </div>
+        
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-white/5 text-gray-400 text-xs uppercase tracking-widest">
+                        <th class="px-8 py-4 font-semibold">User Identity</th>
+                        <th class="px-8 py-4 font-semibold">Current Privilege</th>
+                        <th class="px-8 py-4 font-semibold">Status</th>
+                        <th class="px-8 py-4 font-semibold text-right">Reassign Role</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-white/5">
+                    {% for user_obj in all_users %}
+                    <tr class="hover:bg-white/[0.02] transition-colors group">
+                        <td class="px-8 py-6">
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-cyan-500 flex items-center justify-center font-bold text-white shadow-lg">
+                                    {{ user_obj.username|slice:":1"|upper }}
+                                </div>
+                                <div>
+                                    <div class="font-bold text-white">{{ user_obj.username }}</div>
+                                    <div class="text-xs text-gray-500">{{ user_obj.email|default:"no-email@system.ai" }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-8 py-6">
+                            <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider
+                                {% if user_obj.profile.role == 'ADMIN' %}
+                                    bg-red-500/10 text-red-500 border border-red-500/20
+                                {% elif user_obj.profile.role == 'SUPERVISOR' %}
+                                    bg-indigo-500/10 text-indigo-400 border border-indigo-500/20
+                                {% else %}
+                                    bg-cyan-500/10 text-cyan-400 border border-cyan-500/20
+                                {% endif %}">
+                                {{ user_obj.profile.role }}
+                            </span>
+                        </td>
+                        <td class="px-8 py-6">
+                            <div class="flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full {% if user_obj.is_active %}bg-emerald-500 animate-pulse{% else %}bg-gray-600{% endif %}"></span>
+                                <span class="text-xs text-gray-400">{% if user_obj.is_active %}Synchronized{% else %}Offline{% endif %}</span>
+                            </div>
+                        </td>
+                        <td class="px-8 py-6 text-right">
+                            <form method="POST" class="flex items-center justify-end gap-2">
+                                {% csrf_token %}
+                                <input type="hidden" name="user_id" value="{{ user_obj.id }}">
+                                <select name="role" class="bg-black/40 border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary transition-all">
+                                    {% for role_code, role_label in roles %}
+                                        <option value="{{ role_code }}" {% if user_obj.profile.role == role_code %}selected{% endif %}>
+                                            {{ role_label }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                                <button type="submit" class="p-2 bg-primary/10 text-primary hover:bg-primary hover:text-white rounded-lg transition-all" title="Apply Changes">
+                                    <i data-lucide="save" class="w-4 h-4"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="px-8 py-12 text-center text-gray-500 italic">
+                            No users found in the neural network.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- System Logs Section (Aesthetic) -->
+    <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="glass p-6 rounded-2xl border border-white/10 flex flex-col gap-4">
+            <div class="flex items-center justify-between">
+                <h3 class="font-bold text-sm uppercase tracking-widest text-gray-400">Security Pulse</h3>
+                <i data-lucide="activity" class="w-4 h-4 text-emerald-500"></i>
+            </div>
+            <div class="space-y-3">
+                <div class="flex justify-between text-xs">
+                    <span class="text-gray-500">Encryption Layer</span>
+                    <span class="text-emerald-400">AES-256 ACTIVE</span>
+                </div>
+                <div class="flex justify-between text-xs">
+                    <span class="text-gray-500">Firewall status</span>
+                    <span class="text-emerald-400">OPTIMIZED</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="glass p-6 rounded-2xl border border-white/10 flex flex-col gap-4">
+            <div class="flex items-center justify-between">
+                <h3 class="font-bold text-sm uppercase tracking-widest text-gray-400">Data Flow</h3>
+                <i data-lucide="database" class="w-4 h-4 text-cyan-500"></i>
+            </div>
+            <div class="space-y-3">
+                <div class="flex justify-between text-xs">
+                    <span class="text-gray-500">Active Streams</span>
+                    <span class="text-cyan-400">14 NODE LINKS</span>
+                </div>
+                <div class="flex justify-between text-xs">
+                    <span class="text-gray-500">Packet Integrity</span>
+                    <span class="text-cyan-400">99.9% SECURE</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="glass p-6 rounded-2xl border border-white/10 flex flex-col gap-4">
+            <div class="flex items-center justify-between">
+                <h3 class="font-bold text-sm uppercase tracking-widest text-gray-400">Neural Sync</h3>
+                <i data-lucide="zap" class="w-4 h-4 text-yellow-500"></i>
+            </div>
+            <div class="space-y-3">
+                <div class="flex justify-between text-xs">
+                    <span class="text-gray-500">AI Core Latency</span>
+                    <span class="text-yellow-400">12ms STABLE</span>
+                </div>
+                <div class="flex justify-between text-xs">
+                    <span class="text-gray-500">Sync Status</span>
+                    <span class="text-yellow-400">FULL CONNECT</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

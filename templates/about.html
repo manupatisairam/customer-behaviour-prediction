@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+
+{% block title %}About | AI Call Center Analytics{% endblock %}
+
+{% block content %}
+<section class="py-24 px-6 max-w-7xl mx-auto">
+    <!-- About Header -->
+    <div class="text-center mb-32" data-aos="fade-down">
+        <div class="inline-block px-4 py-1.5 mb-6 rounded-full glass border border-cyan-400/20 text-cyan-400 text-xs font-bold tracking-[0.2em] uppercase">
+            Platform Intelligence
+        </div>
+        <h1 class="text-5xl md:text-7xl font-bold font-heading mb-8 gradient-text tracking-tight">Behind the <span class="text-white">Intelligence</span></h1>
+        <p class="max-w-2xl mx-auto text-xl text-gray-400 leading-relaxed">
+            Our solution leverages advanced machine learning architectures to transform raw call center audio into <span class="text-cyan-400 font-medium">strategic business intelligence</span>.
+        </p>
+    </div>
+
+    <!-- Modules Grid -->
+    <div class="space-y-40">
+        <!-- Module 1 -->
+        <div class="flex flex-col lg:flex-row items-center gap-20" data-aos="fade-up">
+            <div class="lg:w-1/2">
+                <div class="glass p-12 rounded-[3rem] border-cyan-400/20 relative overflow-hidden group hover:border-cyan-400/40 transition-all duration-500 shadow-2xl hover:shadow-cyan-400/10">
+                    <div class="absolute -top-12 -right-12 w-48 h-48 bg-cyan-400/5 rounded-full blur-[80px] group-hover:bg-cyan-400/15 transition-all"></div>
+                    <div class="flex items-center gap-4 mb-8">
+                        <div class="p-3 rounded-2xl bg-cyan-400/10 border border-cyan-400/20">
+                            <i data-lucide="mic-2" class="w-8 h-8 text-cyan-400"></i>
+                        </div>
+                        <div>
+                            <span class="text-cyan-400/60 font-bold uppercase tracking-[0.3em] text-[10px] block">System Layer 01</span>
+                            <h2 class="text-3xl font-bold font-heading">Speech Analytics</h2>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 leading-relaxed text-lg mb-8">
+                        Processes acoustic signals and linguistic patterns using <span class="text-white font-medium">deep neural networks</span>. It handles noise reduction, speaker diarization, and precise transcription in real-time.
+                    </p>
+                    <div class="flex gap-3">
+                        <span class="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-xs text-gray-300 font-medium tracking-wide">NLP CORE</span>
+                        <span class="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-xs text-gray-300 font-medium tracking-wide">99% ACCURACY</span>
+                    </div>
+                </div>
+            </div>
+            <div class="lg:w-1/2 flex justify-center relative">
+                <div class="absolute inset-0 bg-cyan-400/10 blur-[120px] rounded-full"></div>
+                <div class="w-80 h-80 rounded-[3rem] border border-cyan-400/20 flex items-center justify-center relative group overflow-hidden glass">
+                    <i data-lucide="waves" class="w-32 h-32 text-cyan-400/20 animate-pulse group-hover:scale-110 transition-transform"></i>
+                    <div class="absolute inset-0 border-2 border-dashed border-cyan-400/10 rounded-[3rem] animate-spin-slow"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Module 2 -->
+        <div class="flex flex-col lg:flex-row-reverse items-center gap-20" data-aos="fade-up">
+            <div class="lg:w-1/2">
+                <div class="glass p-12 rounded-[3rem] border-indigo-400/20 relative overflow-hidden group hover:border-indigo-400/40 transition-all duration-500 shadow-2xl hover:shadow-indigo-400/10">
+                    <div class="absolute -top-12 -left-12 w-48 h-48 bg-indigo-400/5 rounded-full blur-[80px] group-hover:bg-indigo-400/15 transition-all"></div>
+                    <div class="flex items-center gap-4 mb-8">
+                        <div class="p-3 rounded-2xl bg-indigo-400/10 border border-indigo-400/20">
+                            <i data-lucide="trending-up" class="w-8 h-8 text-indigo-400"></i>
+                        </div>
+                        <div>
+                            <span class="text-indigo-400/60 font-bold uppercase tracking-[0.3em] text-[10px] block">System Layer 02</span>
+                            <h2 class="text-3xl font-bold font-heading">Prediction Module</h2>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 leading-relaxed text-lg mb-8">
+                        Utilizes historical data and real-time behavioral cues to <span class="text-white font-medium">forecast customer intent</span>. Our algorithms identify churn risks and upsell opportunities with unmatched precision.
+                    </p>
+                    <div class="flex gap-3">
+                        <span class="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-xs text-gray-300 font-medium tracking-wide">PROBABILISTIC ML</span>
+                        <span class="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-xs text-gray-300 font-medium tracking-wide">REAL-TIME</span>
+                    </div>
+                </div>
+            </div>
+            <div class="lg:w-1/2 flex justify-center relative">
+                <div class="absolute inset-0 bg-indigo-400/10 blur-[120px] rounded-full"></div>
+                <div class="w-80 h-80 rounded-[3rem] border border-indigo-400/20 flex items-center justify-center relative group overflow-hidden glass">
+                    <i data-lucide="cpu" class="w-32 h-32 text-indigo-400/20 animate-pulse group-hover:scale-110 transition-transform"></i>
+                    <div class="absolute inset-0 border-2 border-dashed border-indigo-400/10 rounded-[3rem] animate-spin-slow"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Module 3 (User Module) -->
+        <div class="flex flex-col lg:flex-row items-center gap-20" data-aos="fade-up">
+            <div class="lg:w-1/2">
+                <div class="glass p-12 rounded-[3rem] border-purple-400/20 relative overflow-hidden group hover:border-purple-400/40 transition-all duration-500 shadow-2xl hover:shadow-purple-400/10">
+                    <div class="absolute -top-12 -right-12 w-48 h-48 bg-purple-400/5 rounded-full blur-[80px] group-hover:bg-purple-400/15 transition-all"></div>
+                    <div class="flex items-center gap-4 mb-8">
+                        <div class="p-3 rounded-2xl bg-purple-400/10 border border-purple-400/20">
+                            <i data-lucide="user-check" class="w-8 h-8 text-purple-400"></i>
+                        </div>
+                        <div>
+                            <span class="text-purple-400/60 font-bold uppercase tracking-[0.3em] text-[10px] block">System Layer 03</span>
+                            <h2 class="text-3xl font-bold font-heading">User Module</h2>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 leading-relaxed text-lg mb-8">
+                        Responsible for handling all <span class="text-white font-medium">user-related operations</span>. It allows secure account creation, authenticated access, and efficient profile management for seamless data interaction.
+                    </p>
+                    <div class="flex gap-3">
+                        <span class="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-xs text-gray-300 font-medium tracking-wide">SECURE AUTH</span>
+                        <span class="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-xs text-gray-300 font-medium tracking-wide">PROFILE MGMT</span>
+                    </div>
+                </div>
+            </div>
+            <div class="lg:w-1/2 flex justify-center relative">
+                <div class="absolute inset-0 bg-purple-400/10 blur-[120px] rounded-full"></div>
+                <div class="w-80 h-80 rounded-[3rem] border border-purple-400/20 flex items-center justify-center relative group overflow-hidden glass">
+                    <i data-lucide="shield-check" class="w-32 h-32 text-purple-400/20 animate-pulse group-hover:scale-110 transition-transform"></i>
+                    <div class="absolute inset-0 border-2 border-dashed border-purple-400/10 rounded-[3rem] animate-spin-slow"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Workflow Section -->
+    <div class="mt-52 text-center" data-aos="zoom-in">
+        <h2 class="text-4xl font-bold font-heading mb-20 tracking-tight">Operational <span class="text-cyan-400">Workflow</span></h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+            <!-- Step 1 -->
+            <div class="group">
+                <div class="glass p-10 rounded-[2rem] border-white/5 hover:border-cyan-400/30 transition-all duration-500 relative">
+                    <div class="text-6xl font-black text-cyan-400/5 absolute -top-8 left-8 group-hover:text-cyan-400/10 transition-colors">01</div>
+                    <div class="w-16 h-16 bg-cyan-400/10 rounded-2xl flex items-center justify-center mb-6 mx-auto group-hover:scale-110 transition-transform border border-cyan-400/20">
+                        <i data-lucide="cloud-download" class="w-8 h-8 text-cyan-400"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4 font-heading">Ingestion</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Secure real-time audio stream capture and 256-bit AES encryption at the source.</p>
+                </div>
+            </div>
+            <!-- Step 2 -->
+            <div class="group">
+                <div class="glass p-10 rounded-[2rem] border-white/5 hover:border-indigo-400/30 transition-all duration-500 relative">
+                    <div class="text-6xl font-black text-indigo-400/5 absolute -top-8 left-8 group-hover:text-indigo-400/10 transition-colors">02</div>
+                    <div class="w-16 h-16 bg-indigo-400/10 rounded-2xl flex items-center justify-center mb-6 mx-auto group-hover:scale-110 transition-transform border border-indigo-400/20">
+                        <i data-lucide="terminal" class="w-8 h-8 text-indigo-400"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4 font-heading">Processing</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Multi-threaded AI analysis of sentiment, tone, and contextual cues in milliseconds.</p>
+                </div>
+            </div>
+            <!-- Step 3 -->
+            <div class="group">
+                <div class="glass p-10 rounded-[2rem] border-white/5 hover:border-cyan-400/30 transition-all duration-500 relative">
+                    <div class="text-6xl font-black text-cyan-400/5 absolute -top-8 left-8 group-hover:text-cyan-400/10 transition-colors">03</div>
+                    <div class="w-16 h-16 bg-cyan-400/10 rounded-2xl flex items-center justify-center mb-6 mx-auto group-hover:scale-110 transition-transform border border-cyan-400/20">
+                        <i data-lucide="zap" class="w-8 h-8 text-cyan-400"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4 font-heading">Action</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Instant dashboard delivery with actionable agent coaching and behavioral predictions.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    @keyframes spin-slow {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+    .animate-spin-slow {
+        animation: spin-slow 20s linear infinite;
+    }
+</style>
+{% endblock %}

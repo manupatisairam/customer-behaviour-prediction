@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Admin Terminal | AI Call Center{% endblock %}
+
+{% block content %}
+<div class="min-h-[80vh] flex items-center justify-center px-6">
+    <div class="w-full max-w-md" data-aos="zoom-in">
+        <div class="glass p-8 rounded-3xl border border-red-500/20 shadow-2xl relative overflow-hidden">
+            <!-- Decorative Elements -->
+            <div class="absolute -top-24 -right-24 w-48 h-48 bg-red-500/10 rounded-full blur-3xl"></div>
+            <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-indigo-500/10 rounded-full blur-3xl"></div>
+
+            <div class="text-center mb-10 relative z-10">
+                <div class="w-20 h-20 bg-red-500/10 border border-red-500/30 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-red-500/10">
+                    <i data-lucide="shield-alert" class="w-10 h-10 text-red-500"></i>
+                </div>
+                <h2 class="text-3xl font-bold font-heading text-white mb-2">Admin Terminal</h2>
+                <p class="text-gray-400">Secure access restricted to authorized personnel only.</p>
+            </div>
+
+            <form method="POST" class="space-y-6 relative z-10">
+                {% csrf_token %}
+                <div class="space-y-2">
+                    <label class="text-sm font-semibold text-gray-300 ml-1">Admin Identifier</label>
+                    <div class="relative group">
+                        <i data-lucide="user" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500 group-focus-within:text-red-500 transition-colors"></i>
+                        <input type="text" name="username" required
+                            class="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-12 pr-4 text-white placeholder-gray-500 focus:outline-none focus:border-red-500/50 focus:ring-1 focus:ring-red-500/50 transition-all"
+                            placeholder="Enter username">
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="text-sm font-semibold text-gray-300 ml-1">Access Key</label>
+                    <div class="relative group">
+                        <i data-lucide="lock" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500 group-focus-within:text-red-500 transition-colors"></i>
+                        <input type="password" name="password" required
+                            class="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-12 pr-4 text-white placeholder-gray-500 focus:outline-none focus:border-red-500/50 focus:ring-1 focus:ring-red-500/50 transition-all"
+                            placeholder="••••••••">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-logout-neon w-full py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-2 group border-red-500/40">
+                    <span class="scan-line"></span>
+                    <i data-lucide="unlock" class="w-5 h-5 transition-transform group-hover:rotate-12"></i>
+                    Initialize Session
+                </button>
+            </form>
+
+            <div class="mt-8 pt-8 border-t border-white/5 text-center">
+                <a href="{% url 'login' %}" class="text-sm text-gray-500 hover:text-cyan-400 transition-colors flex items-center justify-center gap-2">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Return to Standard Access
+                </a>
+            </div>
+        </div>
+        
+        <!-- System Status Footer -->
+        <div class="mt-6 flex justify-between items-center px-4 text-[10px] uppercase tracking-widest text-gray-600 font-mono">
+            <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+                Secure Uplink Active
+            </div>
+            <div>Node: v2.04-Alpha</div>
+        </div>
+    </div>
+</div>
+{% endblock %}

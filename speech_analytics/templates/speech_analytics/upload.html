@@ -1,0 +1,276 @@
+{% extends 'base.html' %}
+
+{% block title %}Upload Audio | AI Call Center{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-6 py-12">
+    <div class="text-center mb-12" data-aos="fade-down">
+        <h1 class="text-4xl font-bold font-heading gradient-text mb-4">Neural Voice Analysis</h1>
+        <p class="text-gray-400">Upload customer call recordings for AI-driven emotion and sentiment extraction.</p>
+    </div>
+
+    <div class="glass p-12 rounded-3xl border border-white/10 relative overflow-hidden" data-aos="zoom-in">
+        <!-- Decoration -->
+        <div class="absolute -top-24 -right-24 w-64 h-64 bg-primary/5 rounded-full blur-3xl"></div>
+        <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-indigo-500/5 rounded-full blur-3xl"></div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 relative z-10">
+            <!-- File Upload Column -->
+            <div class="space-y-6">
+                <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                    <i data-lucide="file-audio" class="text-primary"></i> Batch Ingestion
+                </h3>
+                <form method="POST" enctype="multipart/form-data" id="upload-form">
+                    {% csrf_token %}
+                    <div class="border-2 border-dashed border-white/10 rounded-2xl p-8 text-center hover:border-primary/50 transition-all cursor-pointer group h-64 flex flex-col items-center justify-center"
+                         onclick="document.getElementById('audio_file').click()">
+                        <input type="file" name="audio_file" id="audio_file" class="hidden" accept=".wav,.mp3,.ogg,.m4a,.webm,.flac,.aac" onchange="updateFileName(this)">
+                        
+                        <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                            <i data-lucide="upload" class="w-8 h-8 text-primary"></i>
+                        </div>
+                        
+                        <h4 class="text-sm font-bold text-white mb-1" id="file-label">Upload Recording</h4>
+                        <p class="text-[10px] text-gray-500 uppercase tracking-widest">WAV / MP3 / OGG / M4A / WEBM</p>
+                    </div>
+
+                    <div class="mt-6">
+                        <button type="submit" class="btn-premium w-full py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2">
+                            <span class="scan-line"></span>
+                            Analyze File
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Real-time Recording Column -->
+            <div class="space-y-6 border-l border-white/5 pl-0 md:pl-12">
+                <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                    <i data-lucide="radio" class="text-red-500 animate-pulse"></i> Live Intelligence
+                </h3>
+                
+                <div class="bg-black/40 border border-white/5 rounded-2xl p-8 h-64 flex flex-col items-center justify-center relative group overflow-hidden">
+                    <div id="recording-visual" class="absolute inset-0 flex items-center justify-center gap-1 opacity-20 pointer-events-none">
+                        <!-- Waveform bars -->
+                        <div class="w-1 h-8 bg-primary rounded-full animate-pulse"></div>
+                        <div class="w-1 h-12 bg-primary rounded-full animate-pulse" style="animation-delay: 0.1s"></div>
+                        <div class="w-1 h-16 bg-primary rounded-full animate-pulse" style="animation-delay: 0.2s"></div>
+                        <div class="w-1 h-12 bg-primary rounded-full animate-pulse" style="animation-delay: 0.3s"></div>
+                        <div class="w-1 h-8 bg-primary rounded-full animate-pulse" style="animation-delay: 0.4s"></div>
+                    </div>
+
+                    <button id="mic-btn" onclick="toggleRecording()" class="w-20 h-20 rounded-full bg-red-500/10 border border-red-500/30 flex items-center justify-center group/mic hover:bg-red-500/20 transition-all z-10 relative">
+                        <i data-lucide="mic" id="mic-icon" class="w-10 h-10 text-red-500"></i>
+                        <div id="recording-ring" class="absolute inset-0 rounded-full border-2 border-red-500 animate-ping hidden"></div>
+                    </button>
+
+                    <p id="timer" class="mt-4 font-mono text-lg text-gray-400">00:00</p>
+                    <p id="record-status" class="text-[10px] uppercase tracking-[0.2em] text-gray-500 mt-2 font-bold">Initialize Live Stream</p>
+                </div>
+
+                <div class="mt-6">
+                    <button id="stop-btn" onclick="stopAndUpload()" class="btn-neon w-full py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 opacity-50 cursor-not-allowed" disabled>
+                        <span class="scan-line"></span>
+                        End & Process Call
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Overlay -->
+        <div id="loading-overlay" class="absolute inset-0 bg-black/80 backdrop-blur-md flex flex-col items-center justify-center z-50 hidden">
+            <div class="loader-ring mb-8"></div>
+            <h3 class="text-2xl font-bold gradient-text mb-2 animate-pulse">Neural Processing...</h3>
+            <p class="text-gray-400 text-sm font-mono" id="processing-log">analyzing_audio_vectors...</p>
+        </div>
+    </div>
+
+    <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6" data-aos="fade-up" data-aos-delay="200">
+        <div class="glass p-6 rounded-2xl border border-white/5 text-center">
+            <i data-lucide="waveform" class="w-8 h-8 text-cyan-400 mx-auto mb-4"></i>
+            <h4 class="font-bold text-white mb-2">Librosa Preprocessing</h4>
+            <p class="text-xs text-gray-500">Normalizing amplitude and extracting MFCC features.</p>
+        </div>
+        <div class="glass p-6 rounded-2xl border border-white/5 text-center">
+            <i data-lucide="message-square" class="w-8 h-8 text-indigo-400 mx-auto mb-4"></i>
+            <h4 class="font-bold text-white mb-2">Google STT Engine</h4>
+            <p class="text-xs text-gray-500">Converting voice streams to precise text data.</p>
+        </div>
+        <div class="glass p-6 rounded-2xl border border-white/5 text-center">
+            <i data-lucide="brain" class="w-8 h-8 text-purple-400 mx-auto mb-4"></i>
+            <h4 class="font-bold text-white mb-2">NLP Emotion Core</h4>
+            <p class="text-xs text-gray-500">Detecting frustration, joy, and sentiment scores.</p>
+        </div>
+    </div>
+
+    <!-- Sample Audio Files Showcase -->
+    <div class="mt-12 glass p-8 rounded-3xl border border-white/10" data-aos="fade-up" data-aos-delay="300">
+        <div class="flex items-center justify-between mb-6">
+            <div>
+                <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                    <i data-lucide="folder-audio" class="text-primary"></i> Benchmark Sample Audio Files
+                </h3>
+                <p class="text-xs text-gray-400 mt-1">Available in the project's <code class="text-primary">samples/</code> folder for testing accurate emotion and behavior predictions.</p>
+            </div>
+            <span class="text-[10px] uppercase font-mono px-3 py-1 rounded-full border border-primary/30 text-primary bg-primary/5">Verified Accurate</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-black/30 border border-emerald-500/20 rounded-xl p-4 flex flex-col justify-between hover:border-emerald-500/40 transition-colors">
+                <div>
+                    <div class="flex items-center gap-2 text-emerald-400 font-bold text-sm mb-1">
+                        <i data-lucide="smile" class="w-4 h-4"></i> Positive & Happy
+                    </div>
+                    <p class="text-xs text-gray-300 font-mono">01_happy_customer_resolved.wav</p>
+                    <p class="text-[11px] text-gray-500 mt-1">Praise for quick resolution and helpful agent.</p>
+                </div>
+                <div class="mt-3 text-[10px] text-emerald-400/80 font-mono">Expected: Happy / Joy (85%+)</div>
+            </div>
+
+            <div class="bg-black/30 border border-red-500/20 rounded-xl p-4 flex flex-col justify-between hover:border-red-500/40 transition-colors">
+                <div>
+                    <div class="flex items-center gap-2 text-red-400 font-bold text-sm mb-1">
+                        <i data-lucide="frown" class="w-4 h-4"></i> Angry & Complaint
+                    </div>
+                    <p class="text-xs text-gray-300 font-mono">02_angry_customer_billing_dispute.wav</p>
+                    <p class="text-[11px] text-gray-500 mt-1">Overcharged billing complaint, demanding supervisor.</p>
+                </div>
+                <div class="mt-3 text-[10px] text-red-400/80 font-mono">Expected: Angry / Negative (&lt;30%)</div>
+            </div>
+
+            <div class="bg-black/30 border border-yellow-500/20 rounded-xl p-4 flex flex-col justify-between hover:border-yellow-500/40 transition-colors">
+                <div>
+                    <div class="flex items-center gap-2 text-yellow-400 font-bold text-sm mb-1">
+                        <i data-lucide="help-circle" class="w-4 h-4"></i> Neutral Inquiry
+                    </div>
+                    <p class="text-xs text-gray-300 font-mono">03_neutral_inquiry_account_details.wav</p>
+                    <p class="text-[11px] text-gray-500 mt-1">Factual inquiry regarding branch hours & verification.</p>
+                </div>
+                <div class="mt-3 text-[10px] text-yellow-400/80 font-mono">Expected: Neutral (~50%)</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let mediaRecorder;
+    let audioChunks = [];
+    let startTime;
+    let timerInterval;
+
+    function updateFileName(input) {
+        const label = document.getElementById('file-label');
+        if (input.files.length > 0) {
+            label.innerText = input.files[0].name;
+            label.classList.add('text-primary');
+        }
+    }
+
+    async function toggleRecording() {
+        const micBtn = document.getElementById('mic-btn');
+        const ring = document.getElementById('recording-ring');
+        const status = document.getElementById('record-status');
+        const stopBtn = document.getElementById('stop-btn');
+
+        if (!mediaRecorder || mediaRecorder.state === 'inactive') {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+
+                mediaRecorder.ondataavailable = (event) => {
+                    audioChunks.push(event.data);
+                };
+
+                mediaRecorder.onstop = async () => {
+                    console.log("Ending live stream, preparing neural blob...");
+                    const audioBlob = new Blob(audioChunks, { type: mediaRecorder.mimeType });
+                    const formData = new FormData();
+                    formData.append('audio_file', audioBlob, 'live_call.wav');
+                    formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+
+                    console.log("Uplinking to AI Core...");
+                    try {
+                        const response = await fetch('{% url "upload_audio" %}', {
+                            method: 'POST',
+                            body: formData
+                        });
+                        
+                        console.log("Server Response Received. Status:", response.status);
+                        
+                        if (response.ok) {
+                            window.location.href = response.url;
+                        } else {
+                            const errorText = await response.text();
+                            console.error("Server Error:", errorText);
+                            alert("AI Analysis Failed. Please check your connection.");
+                            document.getElementById('loading-overlay').classList.add('hidden');
+                        }
+                    } catch (err) {
+                        console.error("Network/Upload failed", err);
+                        alert("Network Error: Could not connect to AI Engine.");
+                        document.getElementById('loading-overlay').classList.add('hidden');
+                    }
+                };
+
+                mediaRecorder.start();
+                startTime = Date.now();
+                timerInterval = setInterval(updateTimer, 1000);
+
+                micBtn.classList.add('bg-red-500/20');
+                ring.classList.remove('hidden');
+                status.innerText = "Recording Live Feed...";
+                status.classList.add('text-red-500');
+                stopBtn.disabled = false;
+                stopBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            } catch (err) {
+                console.error("Microphone access denied", err);
+                alert("Microphone Access Denied. Please enable permissions.");
+            }
+        }
+    }
+
+    function updateTimer() {
+        const elapsed = Math.floor((Date.now() - startTime) / 1000);
+        const mins = String(Math.floor(elapsed / 60)).padStart(2, '0');
+        const secs = String(elapsed % 60).padStart(2, '0');
+        document.getElementById('timer').innerText = `${mins}:${secs}`;
+    }
+
+    function startProcessingLogs() {
+        document.getElementById('loading-overlay').classList.remove('hidden');
+        const logs = [
+            "establishing_secure_uplink...",
+            "decompressing_audio_stream...",
+            "librosa_feature_extraction...",
+            "speech_to_text_synthesis...",
+            "nlp_emotion_mapping...",
+            "finalizing_neural_results..."
+        ];
+        let i = 0;
+        setInterval(() => {
+            document.getElementById('processing-log').innerText = logs[i % logs.length];
+            i++;
+        }, 1500);
+    }
+
+    async function stopAndUpload() {
+        if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+            mediaRecorder.stop();
+            clearInterval(timerInterval);
+            startProcessingLogs();
+        }
+    }
+
+    document.getElementById('upload-form').onsubmit = function(e) {
+        const fileInput = document.getElementById('audio_file');
+        if (!fileInput.files || fileInput.files.length === 0) {
+            e.preventDefault();
+            alert("Please select an audio file to analyze.");
+            return false;
+        }
+        startProcessingLogs();
+        return true;
+    };
+</script>
+{% endblock %}

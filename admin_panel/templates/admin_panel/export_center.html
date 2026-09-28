@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Export Center | AI Call Center Intelligence{% endblock %}
+
+{% block content %}
+<div class="flex min-h-[calc(100vh-120px)] mt-10">
+    <!-- Sidebar -->
+    <aside class="w-72 glass border-r border-white/10 rounded-r-3xl overflow-hidden hidden lg:block">
+        <div class="p-8">
+            <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-8">Intelligence Center</p>
+            <nav class="space-y-4">
+                <a href="{% url 'admin_panel:admin_panel_dashboard' %}" class="flex items-center gap-3 p-4 rounded-2xl hover:bg-white/5 transition-all text-gray-400 hover:text-white">
+                    <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+                    <span class="font-bold text-sm">Overview</span>
+                </a>
+                <a href="{% url 'admin_panel:analytics' %}" class="flex items-center gap-3 p-4 rounded-2xl hover:bg-white/5 transition-all text-gray-400 hover:text-white">
+                    <i data-lucide="brain-circuit" class="w-5 h-5"></i>
+                    <span class="font-bold text-sm">Advanced Analytics</span>
+                </a>
+                <a href="{% url 'admin_panel:manage_users' %}" class="flex items-center gap-3 p-4 rounded-2xl hover:bg-white/5 transition-all text-gray-400 hover:text-white">
+                    <i data-lucide="users" class="w-5 h-5"></i>
+                    <span class="font-bold text-sm">Operators</span>
+                </a>
+                <a href="{% url 'admin_panel:admin_reports' %}" class="flex items-center gap-3 p-4 rounded-2xl hover:bg-white/5 transition-all text-gray-400 hover:text-white">
+                    <i data-lucide="file-bar-chart" class="w-5 h-5"></i>
+                    <span class="font-bold text-sm">Reports</span>
+                </a>
+                <a href="{% url 'admin_panel:export_center' %}" class="flex items-center gap-3 p-4 rounded-2xl bg-primary/10 text-primary border border-primary/20">
+                    <i data-lucide="download-cloud" class="w-5 h-5"></i>
+                    <span class="font-bold text-sm">Export Center</span>
+                </a>
+                <a href="{% url 'admin_panel:system_monitor' %}" class="flex items-center gap-3 p-4 rounded-2xl hover:bg-white/5 transition-all text-gray-400 hover:text-white">
+                    <i data-lucide="activity" class="w-5 h-5"></i>
+                    <span class="font-bold text-sm">Live Monitor</span>
+                </a>
+            </nav>
+        </div>
+    </aside>
+
+    <main class="flex-grow px-10 space-y-12">
+        <header>
+            <h1 class="text-3xl font-bold font-heading text-white">Export <span class="gradient-text">Intelligence Center</span></h1>
+            <p class="text-gray-500">Securely download and distribute enterprise intelligence assets.</p>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- PDF Export Card -->
+            <div class="glass p-10 rounded-[3rem] border border-white/10 group hover:border-primary/30 transition-all" data-aos="zoom-in">
+                <div class="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <i data-lucide="file-text" class="text-primary w-10 h-10"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-4">Enterprise PDF Audit</h3>
+                <p class="text-sm text-gray-500 mb-8">Generate a high-fidelity, company-formatted PDF report including embedded charts and neural trend analysis.</p>
+                <div class="flex gap-4">
+                    <a href="{% url 'admin_panel:generate_report' 'comprehensive' %}" class="btn-premium px-8 py-3 rounded-2xl text-xs font-bold uppercase tracking-widest text-white flex items-center gap-2">
+                        <span class="scan-line"></span>
+                        <i data-lucide="download" class="w-4 h-4"></i> EXPORT PDF
+                    </a>
+                </div>
+            </div>
+
+            <!-- CSV Export Card -->
+            <div class="glass p-10 rounded-[3rem] border border-white/10 group hover:border-indigo-400/30 transition-all" data-aos="zoom-in" data-aos-delay="100">
+                <div class="w-16 h-16 rounded-2xl bg-indigo-400/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <i data-lucide="table" class="text-indigo-400 w-10 h-10"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-4">Raw Intelligence Stream</h3>
+                <p class="text-sm text-gray-500 mb-8">Export full behavioral datasets and operator logs in CSV/Excel format for external BI processing.</p>
+                <div class="flex gap-4">
+                    <a href="{% url 'admin_panel:export_logs' %}" class="btn-neon px-8 py-3 rounded-2xl text-xs font-bold uppercase tracking-widest flex items-center gap-2">
+                        <span class="scan-line"></span>
+                        <i data-lucide="download" class="w-4 h-4"></i> EXPORT CSV
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass rounded-[3rem] border border-white/10 overflow-hidden" data-aos="fade-up">
+            <div class="px-10 py-8 border-b border-white/5 bg-white/5">
+                <h3 class="font-bold text-white uppercase tracking-widest text-sm">Recent Export Activity</h3>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="bg-black/20">
+                            <th class="px-10 py-6 text-[10px] font-bold text-gray-500 uppercase tracking-widest">Asset Name</th>
+                            <th class="px-10 py-6 text-[10px] font-bold text-gray-500 uppercase tracking-widest">Type</th>
+                            <th class="px-10 py-6 text-[10px] font-bold text-gray-500 uppercase tracking-widest">Operator</th>
+                            <th class="px-10 py-6 text-[10px] font-bold text-gray-500 uppercase tracking-widest text-right">Synchronization</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-white/5">
+                        {% for report in reports %}
+                        <tr class="hover:bg-white/5 transition-colors group">
+                            <td class="px-10 py-6 font-bold text-white text-sm">{{ report.title }}</td>
+                            <td class="px-10 py-6">
+                                <span class="px-3 py-1 rounded-full text-[8px] font-bold uppercase tracking-widest bg-primary/10 text-primary border border-primary/20">PDF DATA</span>
+                            </td>
+                            <td class="px-10 py-6 text-sm text-gray-400">{{ report.generated_by.username }}</td>
+                            <td class="px-10 py-6 text-right">
+                                <a href="{{ report.file.url }}" download class="text-primary hover:text-white transition-colors">
+                                    <i data-lucide="download" class="w-5 h-5 ml-auto"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="px-10 py-16 text-center text-gray-500 italic">No recent export events detected in the neural stream.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}

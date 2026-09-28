@@ -1,0 +1,181 @@
+{% extends 'base.html' %}
+
+{% block title %}Analysis Result | AI Call Center{% endblock %}
+
+{% block extra_css %}
+<style>
+    .typing-effect {
+        border-right: 2px solid var(--primary);
+        white-space: pre-wrap;
+        overflow: hidden;
+        animation: blink 0.75s step-end infinite;
+    }
+    @keyframes blink { from, to { border-color: transparent } 50% { border-color: var(--primary) } }
+    
+    .gauge-container {
+        position: relative;
+        width: 200px;
+        height: 100px;
+        overflow: hidden;
+    }
+    .gauge-bg {
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        border: 15px solid rgba(255,255,255,0.05);
+        border-bottom: none;
+    }
+    .gauge-fill {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        border: 15px solid var(--gauge-color);
+        border-bottom: none;
+        border-left: none;
+        border-right: none;
+        transform-origin: center;
+        transition: transform 2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .btn-pulse-glow {
+        animation: pulse-glow 2s infinite;
+    }
+    @keyframes pulse-glow {
+        0% { box-shadow: 0 0 5px rgba(0, 242, 255, 0.4); }
+        50% { box-shadow: 0 0 20px rgba(0, 242, 255, 0.8), 0 0 40px rgba(0, 242, 255, 0.2); }
+        100% { box-shadow: 0 0 5px rgba(0, 242, 255, 0.4); }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto px-6 py-12">
+    <div class="flex justify-between items-center mb-10" data-aos="fade-right">
+        <div>
+            <h1 class="text-4xl font-bold font-heading gradient-text">Analysis Report</h1>
+            <p class="text-gray-400">Processed ID: #VOICE-{{ call.id|stringformat:"04d" }}</p>
+        </div>
+        <div class="flex gap-4">
+            <a href="{% url 'predict_behavior' call.id %}" class="btn-premium btn-pulse-glow px-8 py-2 rounded-full text-sm text-white">
+                <span class="scan-line"></span>
+                <i data-lucide="brain" class="w-4 h-4"></i> Predict Behavior
+            </a>
+            <a href="{% url 'upload_audio' %}" class="btn-neon px-6 py-2 rounded-full text-sm">
+                <span class="scan-line"></span>
+                <i data-lucide="plus" class="w-4 h-4"></i> Analyze New Audio
+            </a>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Left: Audio & Transcription -->
+        <div class="lg:col-span-2 space-y-8">
+            <!-- Audio Player -->
+            <div class="glass p-8 rounded-3xl border border-white/10" data-aos="fade-up">
+                <h3 class="text-lg font-bold mb-6 flex items-center gap-2">
+                    <i data-lucide="play-circle" class="text-primary"></i> Playback Console
+                </h3>
+                <div class="bg-black/40 rounded-2xl p-4 border border-white/5">
+                    <audio controls class="w-full">
+                        <source src="{{ call.audio_file.url }}">
+                        Your browser does not support the audio element.
+                    </audio>
+                </div>
+            </div>
+
+            <!-- Transcription -->
+            <div class="glass p-8 rounded-3xl border border-white/10 min-h-[300px]" data-aos="fade-up" data-aos-delay="100">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-lg font-bold flex items-center gap-2">
+                        <i data-lucide="align-left" class="text-indigo-400"></i> AI Transcription
+                    </h3>
+                    <span class="text-[10px] uppercase tracking-widest text-gray-500 font-mono">Status: Decrypted</span>
+                </div>
+                <div class="bg-indigo-500/5 rounded-2xl p-8 border border-indigo-500/10 relative">
+                    <div class="absolute top-4 right-4 opacity-10">
+                        <i data-lucide="quote" class="w-12 h-12"></i>
+                    </div>
+                    <p class="text-gray-300 leading-relaxed font-mono text-sm" id="typing-transcript"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: Metrics -->
+        <div class="space-y-8">
+            <!-- Emotion Card -->
+            <div class="glass p-8 rounded-3xl border border-white/10 text-center" data-aos="fade-left">
+                <h3 class="text-lg font-bold mb-6 text-left flex items-center gap-2">
+                    <i data-lucide="smile" class="text-yellow-400"></i> Emotion Detection
+                </h3>
+                
+                <div class="relative inline-block mb-6">
+                    <div class="w-24 h-24 rounded-full flex items-center justify-center mx-auto border-4
+                        {% if call.emotion == 'Happy' or call.emotion == 'Joy' or call.emotion == 'Positive' %}
+                            border-emerald-500/30 bg-emerald-500/10 text-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.2)]
+                        {% elif call.emotion == 'Angry' or call.emotion == 'Disgust' or call.emotion == 'Fear' or call.emotion == 'Negative' %}
+                            border-red-500/30 bg-red-500/10 text-red-500 shadow-[0_0_20px_rgba(239,68,68,0.2)]
+                        {% elif call.emotion == 'Frustrated' or call.emotion == 'Sadness' %}
+                            border-orange-500/30 bg-orange-500/10 text-orange-500 shadow-[0_0_20px_rgba(249,115,22,0.2)]
+                        {% else %}
+                            border-yellow-500/30 bg-yellow-500/10 text-yellow-500 shadow-[0_0_20px_rgba(234,179,8,0.2)]
+                        {% endif %}">
+                        
+                        {% if call.emotion == 'Happy' or call.emotion == 'Joy' or call.emotion == 'Positive' %}
+                            <i data-lucide="smile" class="w-12 h-12"></i>
+                        {% elif call.emotion == 'Angry' or call.emotion == 'Disgust' or call.emotion == 'Negative' %}
+                            <i data-lucide="frown" class="w-12 h-12"></i>
+                        {% elif call.emotion == 'Frustrated' or call.emotion == 'Fear' or call.emotion == 'Sadness' %}
+                            <i data-lucide="alert-circle" class="w-12 h-12"></i>
+                        {% else %}
+                            <i data-lucide="meh" class="w-12 h-12"></i>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <h2 class="text-3xl font-bold text-white mb-2">{{ call.emotion }}</h2>
+                <p class="text-xs uppercase tracking-widest text-gray-500">Predicted Customer State</p>
+            </div>
+
+            <!-- Sentiment Gauge -->
+            <div class="glass p-8 rounded-3xl border border-white/10 flex flex-col items-center" data-aos="fade-left" data-aos-delay="100">
+                <h3 class="text-lg font-bold mb-8 text-left w-full flex items-center gap-2">
+                    <i data-lucide="bar-chart-3" class="text-cyan-400"></i> Sentiment Score
+                </h3>
+                
+                <div class="gauge-container mb-4">
+                    <div class="gauge-bg"></div>
+                    <div class="gauge-fill" id="sentiment-gauge" 
+                         style="--gauge-color: {% if call.sentiment_score > 66 %}#10b981{% elif call.sentiment_score > 33 %}#eab308{% else %}#ef4444{% endif %};
+                                transform: rotate({{ call.sentiment_score|default:0|add:"-180" }}deg);">
+                    </div>
+                    <div class="absolute bottom-0 left-1/2 -translate-x-1/2 text-3xl font-bold gradient-text">
+                        {{ call.sentiment_score|floatformat:1 }}%
+                    </div>
+                </div>
+                <p class="text-[10px] uppercase tracking-widest text-gray-500">Positivity Index</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Typing Effect
+    const text = "{{ call.transcript|escapejs }}";
+    const target = document.getElementById('typing-transcript');
+    let i = 0;
+    
+    function typeWriter() {
+        if (i < text.length) {
+            target.innerHTML += text.charAt(i);
+            i++;
+            setTimeout(typeWriter, 20);
+        }
+    }
+    
+    window.onload = function() {
+        setTimeout(typeWriter, 1000);
+    };
+</script>
+{% endblock %}
